@@ -1,0 +1,53 @@
+require_relative '../node_modules/react-native/scripts/react_native_pods'
+require_relative '../node_modules/@react-native-community/cli-platform-ios/native_modules'
+ 
+platform :ios, '13.0'
+install! 'cocoapods', :deterministic_uuids => false
+
+target 'FDC' do
+  
+# React Native Maps dependencies
+rn_maps_path = '../node_modules/react-native-maps'
+pod 'react-native-google-maps', :path => rn_maps_path
+
+
+config = use_native_modules!
+
+  # Flags change depending on the env values.
+  flags = get_default_flags()
+
+  use_react_native!(
+    :path => config[:reactNativePath],
+    # to enable hermes on iOS, change `false` to `true` and then install pods
+    :hermes_enabled => flags[:hermes_enabled],
+    :fabric_enabled => flags[:fabric_enabled],
+    # An absolute path to your application root.
+    :app_path => "#{Pod::Config.instance.installation_root}/.."
+  )
+  
+  pod 'RNVectorIcons', :path => '../node_modules/react-native-vector-icons'
+  pod 'react-native-google-places', :path => '../node_modules/react-native-google-places'
+  pod 'react-native-version-check', :path => '../node_modules/react-native-version-check'
+  pod 'GoogleMaps'
+  pod 'Google-Maps-iOS-Utils'
+  pod 'GoogleUtilities', :modular_headers => true
+ 
+  target 'FDCTests' do
+    inherit! :complete
+  end
+   use_flipper!()
+
+  post_install do |installer|
+    installer.pods_project.targets.each do |target|
+      if target.name == 'react-native-google-places'
+        target.build_configurations.each do |config|
+          config.build_settings['CLANG_ENABLE_MODULES'] = 'No'
+        end
+      end
+      if target.name == "React"
+        target.remove_from_project
+      end
+    end
+  end
+
+ end
