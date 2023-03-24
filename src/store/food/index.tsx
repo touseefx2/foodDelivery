@@ -96,7 +96,7 @@ class food {
                   branchSetting.estimatedDeliveryTime || "5",
                 estimatedPickupTime: branchSetting.estimatedPickupTime || "5",
                 deliveryCharges: branchSetting.deliveryCharges || "100",
-                tax: branchSetting.tax || 10,
+                tax: branchSetting.tax || 5,
               }
             : null,
           appName: functions.capitalizeTheFirstLetterOfEachWord(
