@@ -86,7 +86,7 @@ class food {
                     longitude: data.location?.longitude || 72.96931675031028,
                   },
                   address: functions.capitalizeTheFirstLetterOfEachWord(
-                    data.address?.trim()
+                    data.address?.trim() || "Resturant Address"
                   ),
                 },
                 opening_times: data.opening_times || openTimes,
