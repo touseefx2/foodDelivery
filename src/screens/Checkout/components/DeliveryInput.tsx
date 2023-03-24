@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   View,
   Text,
@@ -7,18 +7,18 @@ import {
   TouchableOpacity,
   Linking,
   TextInput,
-} from 'react-native';
-import theme from '../../../theme';
-import {styles} from '../styles';
-import utils from '../../../utils/index';
-import store from '../../../store';
-import {observer} from 'mobx-react';
-import {Permisiions} from '../../../utils/Permissions';
-import NetInfo from '@react-native-community/netinfo';
+} from "react-native";
+import theme from "../../../theme";
+import { styles } from "../styles";
+import utils from "../../../utils/index";
+import store from "../../../store";
+import { observer } from "mobx-react";
+import { Permisiions } from "../../../utils/Permissions";
+import NetInfo from "@react-native-community/netinfo";
 import {
   responsiveFontSize,
   responsiveHeight,
-} from 'react-native-responsive-dimensions';
+} from "react-native-responsive-dimensions";
 
 export default observer(DeliveryInput);
 function DeliveryInput({
@@ -33,19 +33,19 @@ function DeliveryInput({
   goToOrderLocation,
   toast,
 }) {
-  const {appName, setIsLocation} = store.General;
-  const {user, resturantDetails} = store.User;
-  const addressText = appName + ' ' + resturantDetails?.loc.address;
+  const { appName, setIsLocation } = store.General;
+  const { user, resturantDetails } = store.User;
+  const addressText = appName + " " + resturantDetails?.loc.address;
 
   const selectLocation = () => {
-    NetInfo.fetch().then(state => {
+    NetInfo.fetch().then((state) => {
       if (state.isConnected) {
         Permisiions.Location.requestLocationPermission(
           setIsLocation,
-          goToOrderLocation,
+          goToOrderLocation
         );
       } else {
-        toast?.current?.show('Please connect internet');
+        toast?.current?.show("Please connect internet");
       }
     });
   };
@@ -53,8 +53,8 @@ function DeliveryInput({
   const navigatetoGoogleMaps = () => {
     const latLng = `${resturantDetails?.loc?.coords?.latitude},${resturantDetails?.loc?.coords?.longitude}`;
     const scheme = Platform.select({
-      ios: 'maps:0,0?q=',
-      android: 'geo:0,0?q=',
+      ios: "maps:0,0?q=",
+      android: "geo:0,0?q=",
     });
     const url = Platform.select({
       ios: `https://www.google.com/maps/?api=1&query=${addressText}&center=${latLng}`,
@@ -62,11 +62,11 @@ function DeliveryInput({
     });
 
     Linking.canOpenURL(url)
-      .then(supported => {
+      .then((supported) => {
         return Linking.openURL(url);
       })
-      .catch(err => {
-        console.log('OpenGoogleMap Error:', err);
+      .catch((err) => {
+        console.log("OpenGoogleMap Error:", err);
       });
   };
 
@@ -86,12 +86,12 @@ function DeliveryInput({
             editable={user ? false : true}
             style={[
               styles.inputConatiner,
-              Platform.OS == 'ios' && {height: responsiveHeight(6.2)},
+              Platform.OS == "ios" && { height: responsiveHeight(6.2) },
             ]}
             placeholderTextColor={theme.color.subTitleLight}
             placeholder="Enter your name"
             value={name}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setName(val);
             }}
           />
@@ -101,17 +101,18 @@ function DeliveryInput({
             style={[
               styles.inputConatiner,
               {
-                alignItems: 'center',
-                flexDirection: 'row',
-                justifyContent: 'space-between',
+                alignItems: "center",
+                flexDirection: "row",
+                justifyContent: "space-between",
               },
-            ]}>
+            ]}
+          >
             <Image
-              source={require('../../../assets/images/flag/pakistan.png')}
+              source={require("../../../assets/images/flag/pakistan.png")}
               style={styles.CountryLogo}
             />
 
-            <Text style={[styles.sectionsSubTitle, {marginTop: 0}]}>+92</Text>
+            <Text style={[styles.sectionsSubTitle, { marginTop: 0 }]}>+92</Text>
 
             <TextInput
               style={styles.mobileInput}
@@ -120,8 +121,8 @@ function DeliveryInput({
               keyboardType="phone-pad"
               placeholder="3123456789"
               value={phone}
-              onChangeText={val => {
-                setPhone(val.replace(/[^0-9]/, ''));
+              onChangeText={(val) => {
+                setPhone(val.replace(/[^0-9]/, ""));
               }}
             />
 
@@ -132,19 +133,19 @@ function DeliveryInput({
                 size={responsiveFontSize(2.35)}
               />
             ) : (
-              <View style={{width: responsiveFontSize(2.35)}} />
+              <View style={{ width: responsiveFontSize(2.35) }} />
             )}
           </View>
         </>
       )}
 
-      {deliveryType.name.toLowerCase().trim() == 'delivery' ? (
+      {deliveryType.name.toLowerCase().trim() == "delivery" ? (
         <>
           {/* map image */}
           <View>
             <Image
               style={styles.mapimg}
-              source={require('../../../assets/images/map/img.png')}
+              source={require("../../../assets/images/map/img.png")}
             />
             <utils.vectorIcon.Ionicons
               style={styles.mapPin}
@@ -155,25 +156,27 @@ function DeliveryInput({
           </View>
           {/* adress and change button */}
           <View style={styles.deliveryInputContainer}>
-            <View style={{width: '75%'}}>
+            <View style={{ width: "75%" }}>
               <Text
                 style={[
                   styles.sectionsSubTitle,
                   {
                     marginTop: 0,
-                    textTransform: 'none',
+                    textTransform: "none",
                   },
-                ]}>
-                {address != ''
-                  ? address + ', ' + selectedLocation.address
-                  : 'Select your delivery address'}
+                ]}
+              >
+                {address != ""
+                  ? address + ", " + selectedLocation.address
+                  : "Select your delivery address"}
               </Text>
             </View>
 
             <TouchableOpacity
               activeOpacity={0.6}
               onPress={selectLocation}
-              style={styles.deliverButtonContainer}>
+              style={styles.deliverButtonContainer}
+            >
               <Text
                 style={[
                   styles.sectionsSubTitle,
@@ -182,8 +185,9 @@ function DeliveryInput({
                     fontFamily: theme.fonts.fontBold,
                     marginTop: 0,
                   },
-                ]}>
-                {address == '' ? 'Select' : 'Change'}
+                ]}
+              >
+                {address == "" ? "Select" : "Change"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -195,10 +199,11 @@ function DeliveryInput({
             <Text style={styles.sectionsMediumTitle}>Pickup Location</Text>
             <TouchableOpacity
               activeOpacity={0.8}
-              onPress={navigatetoGoogleMaps}>
+              onPress={navigatetoGoogleMaps}
+            >
               <Image
-                style={[styles.mapimg, {marginTop: responsiveHeight(1.4)}]}
-                source={require('../../../assets/images/map/img.png')}
+                style={[styles.mapimg, { marginTop: responsiveHeight(1.4) }]}
+                source={require("../../../assets/images/map/img.png")}
               />
               <utils.vectorIcon.Ionicons
                 style={styles.mapPin}

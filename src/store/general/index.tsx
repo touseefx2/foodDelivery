@@ -13,7 +13,7 @@ class general {
   @observable isInternet = false;
   @observable isLocation = false;
   @observable appState = AppState.currentState;
-  @observable resendOTPTime = 59;
+  @observable resendOTPTime = 40;
   @observable GooglApiKey = 'AIzaSyC75RWT0q9xkASq2YhX2vGi1R-e_p2pnWU'; // provide google api key and  must enable place api
   @persist('object') @observable apiLevel = '';
   @persist('object') @observable appBuildNumber = '';

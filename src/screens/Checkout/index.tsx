@@ -1,4 +1,4 @@
-import React, {useEffect, useState, useRef} from 'react';
+import React, { useEffect, useState, useRef } from "react";
 import {
   SafeAreaView,
   ScrollView,
@@ -6,32 +6,32 @@ import {
   Keyboard,
   BackHandler,
   KeyboardAvoidingView,
-} from 'react-native';
-import {styles} from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import utils from '../../utils/index';
-import theme from '../../theme';
-import Toast from 'react-native-easy-toast';
-import Geolocation from 'react-native-geolocation-service';
-import PickupIndicationModal from './components/PickupIndicationModal';
-import BottomButton from './components/BottomButton';
-import Header from './components/Header';
-import DeliveryTypes from './components/DeliveryTypes';
-import CartSection from './components/CartSection';
-import CheckoutSection from './components/CheckoutSection';
+} from "react-native";
+import { styles } from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import utils from "../../utils/index";
+import theme from "../../theme";
+import Toast from "react-native-easy-toast";
+import Geolocation from "react-native-geolocation-service";
+import PickupIndicationModal from "./components/PickupIndicationModal";
+import BottomButton from "./components/BottomButton";
+import Header from "./components/Header";
+import DeliveryTypes from "./components/DeliveryTypes";
+import CartSection from "./components/CartSection";
+import CheckoutSection from "./components/CheckoutSection";
 
 export default observer(Checkout);
 
 function Checkout(props) {
-  const imgLoaderSrc = require('../../assets/images/imgLoader/img.gif');
+  const imgLoaderSrc = require("../../assets/images/imgLoader/img.gif");
   const rbSheet = useRef(null);
   const scrollRef = useRef(null);
   const toast = useRef(null);
-  const {isInternet} = store.General;
-  const {sliderImages} = store.Food;
+  const { isInternet } = store.General;
+  const { sliderImages } = store.Food;
 
-  const {attempToPlaceOrder, placeOrderLoader} = store.Orders;
+  const { attempToPlaceOrder, placeOrderLoader } = store.Orders;
   const {
     currentLocation,
     user,
@@ -48,19 +48,19 @@ function Checkout(props) {
   const [isOTPModal, setIsOTPModal] = useState(false);
   const [getCurrentLocationLoader, setGetCurrentLocationLoader] =
     useState(false);
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [verifyPhoneNum, setVerifyPhoneNum] = useState('');
+  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [verifyPhoneNum, setVerifyPhoneNum] = useState("");
   const [isVerify, setIsVerify] = useState(false);
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState("");
   const [selectedLocation, setSelectedLocation] = useState(null);
-  const [specialInstructions, setSpecialInstructions] = useState('');
+  const [specialInstructions, setSpecialInstructions] = useState("");
   const [isCart, setIsCart] = useState(false);
-  const [indicatorStatus, setIndicatorStatus] = useState('menu');
+  const [indicatorStatus, setIndicatorStatus] = useState("menu");
   const [CurrentLocationErrorCount, setCurrentLocationErrorCount] = useState(0);
   const [isPickupIndicationModal, setIsPickupIndicationModal] = useState(false);
   const [estimatedTime, setEstimatedTime] = useState(0);
-  const [promoCode, setPromoCode] = useState('');
+  const [promoCode, setPromoCode] = useState("");
   const [PromoApply, setPromoApply] = useState(null);
   const [deliveryCharges, setDeliveryCharges] = useState(0);
   const [taxPercentage, setTaxPercentage] = useState(0);
@@ -69,15 +69,15 @@ function Checkout(props) {
   const [total, settotal] = useState(0);
   const [deliveryType, setDeliveryType] = useState(null);
   const [deliveryTypesData, setDeliveryTypesData] = useState(
-    resturantDetails.deliveryType || [],
+    resturantDetails.deliveryType || []
   );
 
   useEffect(() => {
-    if (!isCart) setIndicatorStatus('menu');
-    if (isCart) setIndicatorStatus('cart');
+    if (!isCart) setIndicatorStatus("menu");
+    if (isCart) setIndicatorStatus("cart");
     const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackButtonClick,
+      "hardwareBackPress",
+      handleBackButtonClick
     );
     return () => {
       subscription.remove();
@@ -86,20 +86,20 @@ function Checkout(props) {
 
   useEffect(() => {
     if (deliveryTypesData.length > 0)
-      setDeliveryType(deliveryTypesData.find(item => item.isSel));
+      setDeliveryType(deliveryTypesData.find((item) => item.isSel));
   }, [deliveryTypesData]);
 
   useEffect(() => {
     if (sliderImages && deliveryType) {
       setEstimatedTime(
-        deliveryType?.name == 'delivery'
+        deliveryType?.name == "delivery"
           ? resturantDetails.estimatedDeliveryTime
-          : resturantDetails.estimatedPickupTime,
+          : resturantDetails.estimatedPickupTime
       );
       setDeliveryCharges(
-        deliveryType?.name == 'delivery'
+        deliveryType?.name == "delivery"
           ? parseFloat(resturantDetails?.deliveryCharges || 0)
-          : 0,
+          : 0
       );
       setTaxPercentage(parseFloat(resturantDetails?.tax || 0));
     }
@@ -114,7 +114,7 @@ function Checkout(props) {
   useEffect(() => {
     if (PromoApply) {
       const value = parseFloat(
-        (PromoApply.percentage / 100) * subTotal,
+        (PromoApply.percentage / 100) * subTotal
       ).toFixed();
       setDiscountPrice(value);
     }
@@ -127,8 +127,8 @@ function Checkout(props) {
 
   useEffect(() => {
     if (user) {
-      setName(user?.username || '');
-      setPhone(user?.mobile?.toString().slice(2) || '');
+      setName(user?.username || "");
+      setPhone(user?.mobile?.toString().slice(2) || "");
     }
   }, [user]);
 
@@ -138,9 +138,9 @@ function Checkout(props) {
 
   useEffect(() => {
     if (
-      phone != '' &&
-      verifyPhoneNum != '' &&
-      '+92' + phone == verifyPhoneNum
+      phone != "" &&
+      verifyPhoneNum != "" &&
+      "+92" + phone == verifyPhoneNum
     ) {
       setIsVerify(true);
       return;
@@ -157,16 +157,16 @@ function Checkout(props) {
 
     if (isCart) {
       setIsCart(false);
-      setPromoCode('');
+      setPromoCode("");
       setPromoApply(null);
       setDiscountPrice(0);
       setCurrentLocationErrorCount(0);
-      setSpecialInstructions('');
+      setSpecialInstructions("");
       if (!user) {
-        setVerifyPhoneNum('');
+        setVerifyPhoneNum("");
         setIsVerify(false);
-        setName('');
-        setPhone('');
+        setName("");
+        setPhone("");
       }
     }
 
@@ -180,7 +180,7 @@ function Checkout(props) {
   const getCurrentLocation = () => {
     setGetCurrentLocationLoader(true);
     Geolocation.getCurrentPosition(
-      async position => {
+      async (position) => {
         setGetCurrentLocationLoader(false);
         setCurrentLocationErrorCount(0);
         const points = {
@@ -192,19 +192,19 @@ function Checkout(props) {
           },
         };
         setCurrentLocation(points);
-        placeOrder('', points);
+        placeOrder("", points);
       },
-      error => {
+      (error) => {
         setGetCurrentLocationLoader(false);
-        console.log('getCurrentLocation error: ', error.message);
+        console.log("getCurrentLocation error: ", error.message);
         if (error.code == 3) {
           if (CurrentLocationErrorCount >= 2) {
-            Alert.alert('', 'Current Location not get, please try again');
+            Alert.alert("", "Current Location not get, please try again");
             return;
           }
           if (!currentLocation) {
             getCurrentLocation();
-            setCurrentLocationErrorCount(prevState => prevState + 1);
+            setCurrentLocationErrorCount((prevState) => prevState + 1);
           }
         }
       },
@@ -212,12 +212,12 @@ function Checkout(props) {
         enableHighAccuracy: true,
         timeout: 20000,
         maximumAge: 10000,
-      },
+      }
     );
   };
 
   const goToOrderLocation = () => {
-    props.navigation.navigate('OrderLocation', {
+    props.navigation.navigate("OrderLocation", {
       selectedLocation,
       address,
       setAddress,
@@ -227,8 +227,8 @@ function Checkout(props) {
 
   const placeOrder = (check, currentLocation) => {
     Keyboard.dismiss();
-    const isDelivery = deliveryType?.name.trim().toLowerCase() === 'delivery';
-    const isPickup = deliveryType?.name.trim().toLowerCase() === 'pickup';
+    const isDelivery = deliveryType?.name.trim().toLowerCase() === "delivery";
+    const isPickup = deliveryType?.name.trim().toLowerCase() === "pickup";
     const isNameValid =
       name.trim() && utils.regularExpression.name.test(name.trim());
     const isPhoneValid = phone && utils.regularExpression.phone.test(phone);
@@ -236,22 +236,22 @@ function Checkout(props) {
     const productIds = [];
     const productsList = [];
     if (!isNameValid) {
-      toast?.current?.show('Please enter a valid name');
+      toast?.current?.show("Please enter a valid name");
       return;
     }
     if (!isPhoneValid) {
-      toast?.current?.show('Please enter a valid phone number');
+      toast?.current?.show("Please enter a valid phone number");
       return;
     }
     if (!isAddressValid && isDelivery) {
-      toast?.current?.show('Please select a delivery address');
+      toast?.current?.show("Please select a delivery address");
       return;
     }
 
-    cart.data.forEach(item => {
-      const variants = item.variants.map(variant => {
-        const {name, ...rest} = variant;
-        return {...rest, value: name};
+    cart.data.forEach((item) => {
+      const variants = item.variants.map((variant) => {
+        const { name, ...rest } = variant;
+        return { ...rest, value: name };
       });
       productIds.push(item.productId);
       productsList.push({
@@ -264,12 +264,11 @@ function Checkout(props) {
     });
 
     const order = {
-      area: location.area._id,
       username: name.trim(),
       usermobile: `+92${phone}`,
-      usertype: user ? 'customer' : 'guest',
+      usertype: user ? "customer" : "guest",
       instructions: specialInstructions,
-      paymentMethod: 'cash',
+      paymentMethod: "cash",
       city: location.city._id,
       address: isDelivery
         ? address
@@ -283,16 +282,16 @@ function Checkout(props) {
         longitude: currentLocation?.coords?.longitude,
       },
       isPromoCodeApplied: PromoApply ? true : false,
-      promoCode: PromoApply?.code || PromoApply?._id || '',
-      promoType: PromoApply?.type || '',
-      promoDiscountPercentage: PromoApply?.percentage || '',
-      promoDiscountAmount: PromoApply ? discountPrice : '',
+      promoCode: PromoApply?.code || PromoApply?._id || "",
+      promoType: PromoApply?.type || "",
+      promoDiscountPercentage: PromoApply?.percentage || "",
+      promoDiscountAmount: PromoApply ? discountPrice : "",
       taxpercent: taxPercentage,
       tax: taxPrice,
       deliveryCharges: deliveryCharges,
       bill: subTotal,
       finalBill: total,
-      status: 'pending',
+      status: "pending",
     };
 
     if (isDelivery) {
@@ -313,14 +312,14 @@ function Checkout(props) {
     if (isInternet) {
       if (isPickup) checkPickupIndication(check, order);
       else attempToPlaceOrder(order, props);
-    } else toast?.current?.show('Please connect to the internet', 1000);
+    } else toast?.current?.show("Please connect to the internet", 1000);
   };
 
   const checkPickupIndication = (check, order) => {
-    if (check == 'continue') {
+    if (check == "continue") {
       setIsPickupIndicationModal(false);
       if (isInternet) attempToPlaceOrder(order, props);
-      else toast?.current?.show('Please connect to the internet', 1000);
+      else toast?.current?.show("Please connect to the internet", 1000);
       return;
     }
     setIsPickupIndicationModal(true);
@@ -330,7 +329,7 @@ function Checkout(props) {
     <SafeAreaView style={styles.container}>
       <Header props={props} goBack={goBack} indicatorStatus={indicatorStatus} />
 
-      <KeyboardAvoidingView style={{flex: 1}}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
         <ScrollView ref={scrollRef} showsVerticalScrollIndicator={false}>
           {isCart ? (
             <CheckoutSection
@@ -399,7 +398,7 @@ function Checkout(props) {
         setIsCart={setIsCart}
       />
       <utils.Loader
-        text={placeOrderLoader ? 'Please wait' : 'Getting Current Location'}
+        text={placeOrderLoader ? "Please wait" : "Getting Current Location"}
         load={placeOrderLoader || getCurrentLocationLoader}
       />
       {isOTPModal && (
@@ -426,8 +425,8 @@ function Checkout(props) {
         ref={toast}
         position="center"
         opacity={0.9}
-        style={{backgroundColor: theme.color.button1}}
-        textStyle={{color: theme.color.buttonText}}
+        style={{ backgroundColor: theme.color.button1 }}
+        textStyle={{ color: theme.color.buttonText }}
       />
     </SafeAreaView>
   );

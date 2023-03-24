@@ -1,16 +1,16 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {View, Text, ScrollView} from 'react-native';
-import {styles} from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import utils from '../../utils/index';
-import theme from '../../theme';
-import Toast from 'react-native-easy-toast';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
-import ShowVariation from './components/ShowVariation';
-import Bottom from './components/Bottom';
-import Header from './components/Header';
-import ProductAvailabilitySheet from './components/ProductAvailabilitySheet';
+import React, { useEffect, useState, useRef } from "react";
+import { View, Text, ScrollView } from "react-native";
+import { styles } from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import utils from "../../utils/index";
+import theme from "../../theme";
+import Toast from "react-native-easy-toast";
+import { responsiveHeight } from "react-native-responsive-dimensions";
+import ShowVariation from "./components/ShowVariation";
+import Bottom from "./components/Bottom";
+import Header from "./components/Header";
+import ProductAvailabilitySheet from "./components/ProductAvailabilitySheet";
 
 export default observer(FoodScreen);
 function FoodScreen({
@@ -23,17 +23,17 @@ function FoodScreen({
   const rbSheet = useRef(null);
   const toast = useRef(null);
 
-  const foodName = food.title || '';
-  const foodDescription = food.description || '';
+  const foodName = food.title || "";
+  const foodDescription = food.description || "";
   const image = food.image
-    ? {uri: food.image}
-    : require('../../assets/images/burger/img.jpeg');
+    ? { uri: food.image }
+    : require("../../assets/images/burger/img.jpeg");
   const foodPrice = food.price;
   const baseVariationsData = food.base_variation.slice() || [];
   const additionalVariationsData = food.additional_variation.slice() || [];
-  const {notAvailableOptions} = store.Food;
-  const {cart, setCart, user} = store.User;
-  const {isInternet} = store.General;
+  const { notAvailableOptions } = store.Food;
+  const { cart, setCart, user } = store.User;
+  const { isInternet } = store.General;
 
   const [numOfItems, setNumOfItems] = useState(1);
   const [baseVariants, setBaseVariants] = useState([]);
@@ -41,13 +41,13 @@ function FoodScreen({
   const [isRequiredFieldEmpty, setIsRequiredFieldEmpty] = useState(true);
   const [productOptions, setProductOptions] = useState(notAvailableOptions[0]);
   const [selectedProductOption, setSelectedProductOption] = useState(
-    notAvailableOptions[0],
+    notAvailableOptions[0]
   );
 
   useEffect(() => {
     setTimeout(() => {
-      attemptToSetVaitaints(baseVariationsData, 'base');
-      attemptToSetVaitaints(additionalVariationsData, 'additional');
+      attemptToSetVaitaints(baseVariationsData, "base");
+      attemptToSetVaitaints(additionalVariationsData, "additional");
     }, 5);
   }, []);
 
@@ -59,11 +59,11 @@ function FoodScreen({
       if (requiredVariant.length <= 0)
         requiredVariant = getRequiredVariant(additionalVariants);
 
-      requiredVariant.forEach(item => {
-        const obj = {...item};
+      requiredVariant.forEach((item) => {
+        const obj = { ...item };
         obj.isSelected = false;
         if (obj.details.length > 0) {
-          const arr = obj.details.filter(item => item.isSel);
+          const arr = obj.details.filter((item) => item.isSel);
           if (arr.length > 0) obj.isSelected = true;
           variant.push(obj);
         }
@@ -82,36 +82,36 @@ function FoodScreen({
   }, [baseVariants, additionalVariants]);
 
   const processVariants = (arr, check) => {
-    const variants = arr.map(item => {
-      const obj = {...item, viewmore: false};
-      const details = item.details.map(detail => {
-        const detailObj = {...detail, isSel: false, variant: item.name};
-        if (check === 'base') {
+    const variants = arr.map((item) => {
+      const obj = { ...item, viewmore: false };
+      const details = item.details.map((detail) => {
+        const detailObj = { ...detail, isSel: false, variant: item.name };
+        if (check === "base") {
           detailObj.isRequire = detail.isRequired;
         }
         return detailObj;
       });
-      return {...obj, details};
+      return { ...obj, details };
     });
 
-    if (check === 'base')
-      return {baseVariants: variants, additionalVariants: []};
-    else return {baseVariants: [], additionalVariants: variants};
+    if (check === "base")
+      return { baseVariants: variants, additionalVariants: [] };
+    else return { baseVariants: [], additionalVariants: variants };
   };
 
   const attemptToSetVaitaints = (arr, check) => {
-    const {baseVariants, additionalVariants} = processVariants(arr, check);
-    if (check == 'base') setBaseVariants(baseVariants);
+    const { baseVariants, additionalVariants } = processVariants(arr, check);
+    if (check == "base") setBaseVariants(baseVariants);
     else setAdditionalVariants(additionalVariants);
   };
 
-  const getRequiredVariant = arr => {
+  const getRequiredVariant = (arr) => {
     let variant = [];
     arr
       .filter(function (item) {
         return item.isRequired === true;
       })
-      .forEach(item => {
+      .forEach((item) => {
         variant.push(item);
       });
     return variant;
@@ -120,18 +120,18 @@ function FoodScreen({
   const onClickHeart = () => {
     if (isInternet) {
       if (!user) {
-        toast?.current?.show('Please login to mark favourite', 500);
+        toast?.current?.show("Please login to mark favourite", 500);
         return;
       }
       onPressHeart();
-    } else toast?.current?.show('Please connect to the internet', 500);
+    } else toast?.current?.show("Please connect to the internet", 500);
   };
 
   return (
     <>
       <utils.CoverImagesSlider
         images={image}
-        screen={'food'}
+        screen={"food"}
         isEmptyVariants={isEmptyVariants}
       />
       {!isEmptyVariants && (
@@ -147,18 +147,19 @@ function FoodScreen({
           paddingHorizontal: 15,
           paddingBottom: responsiveHeight(17),
         }}
-        showsVerticalScrollIndicator={false}>
+        showsVerticalScrollIndicator={false}
+      >
         <View style={styles.titleSection}>
-          <View style={{width: '60%'}}>
+          <View style={{ width: "60%" }}>
             <Text style={styles.sectionTitle1}>
               {utils.functions.capitalizeTheFirstLetterOfEachWord(
-                foodName.trim(),
+                foodName.trim()
               )}
             </Text>
           </View>
-          <View style={{width: '35%'}}>
+          <View style={{ width: "35%" }}>
             <Text style={styles.sectionTitle2}>
-              {baseVariants.length <= 0 ? 'Rs. ' : 'from Rs. '}
+              {baseVariants.length <= 0 ? "Rs. " : "from Rs. "}
               {foodPrice.toFixed()}
             </Text>
           </View>
@@ -208,8 +209,8 @@ function FoodScreen({
         ref={toast}
         position="bottom"
         opacity={1}
-        style={{backgroundColor: theme.color.button1}}
-        textStyle={{color: theme.color.buttonText}}
+        style={{ backgroundColor: theme.color.button1 }}
+        textStyle={{ color: theme.color.buttonText }}
       />
     </>
   );

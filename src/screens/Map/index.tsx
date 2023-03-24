@@ -1,15 +1,15 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {SafeAreaView, StatusBar} from 'react-native';
-import styles from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import theme from '../../theme';
-import Toast from 'react-native-easy-toast';
-import {isPointInPolygon} from 'geolib';
-import Geolocation from 'react-native-geolocation-service';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import utils from '../../utils';
+import React, { useEffect, useRef, useState } from "react";
+import { SafeAreaView, StatusBar } from "react-native";
+import styles from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import theme from "../../theme";
+import Toast from "react-native-easy-toast";
+import { isPointInPolygon } from "geolib";
+import Geolocation from "react-native-geolocation-service";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import utils from "../../utils";
 
 export default observer(Map);
 interface Props {
@@ -19,11 +19,11 @@ function Map(props: Props) {
   let mapRef = useRef(null);
   const toast = useRef(null);
 
-  const {LATITUDE_DELTA, LONGITUDE_DELTA} = theme.window;
-  const {isInternet, setIsLocation} = store.General;
-  const {currentLocation, setCurrentLocation, polygons} = store.User;
+  const { LATITUDE_DELTA, LONGITUDE_DELTA } = theme.window;
+  const { isInternet, setIsLocation } = store.General;
+  const { currentLocation, setCurrentLocation, polygons } = store.User;
   const [coordinates, setCoordinates] = useState(
-    props.route.params.selectedLocation?.coords || null,
+    props.route.params.selectedLocation?.coords || null
   );
   const [isCoordinatesExistInPolygons, setIsCoordinatesExistInPolygons] =
     useState(false);
@@ -38,7 +38,7 @@ function Map(props: Props) {
           latitude: coordinates?.lat,
           longitude: coordinates?.long,
         },
-        setIsCoordinatesExistInPolygons,
+        setIsCoordinatesExistInPolygons
       );
   }, [isMapReady]);
 
@@ -56,7 +56,7 @@ function Map(props: Props) {
 
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
-      async position => {
+      async (position) => {
         setCurrentLocation({
           coords: {
             latitude: position.coords.latitude,
@@ -70,21 +70,21 @@ function Map(props: Props) {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           },
-          () => {},
+          () => {}
         );
       },
-      error => {
-        console.log('getCurrentLocation  error : ', error.message);
+      (error) => {
+        console.log("getCurrentLocation  error : ", error.message);
       },
       {
         enableHighAccuracy: true,
         timeout: 20000,
         maximumAge: 10000,
-      },
+      }
     );
   };
 
-  const checkIsRegionPointsExistInPolygons = point => {
+  const checkIsRegionPointsExistInPolygons = (point) => {
     if (polygons.length > 0) {
       for (let index = 0; index < polygons.length; index++) {
         const item = polygons[index];
@@ -111,7 +111,7 @@ function Map(props: Props) {
     props.route.params.setSelectedLocation({
       area: area,
       city: city,
-      coords: {lat: coordinates.latitude, long: coordinates.longitude},
+      coords: { lat: coordinates.latitude, long: coordinates.longitude },
     });
     props.route.params.setcity(city);
     props.route.params.setarea(area);
@@ -152,8 +152,8 @@ function Map(props: Props) {
         ref={toast}
         position="center"
         opacity={0.9}
-        style={{backgroundColor: theme.color.button1}}
-        textStyle={{color: theme.color.buttonText}}
+        style={{ backgroundColor: theme.color.button1 }}
+        textStyle={{ color: theme.color.buttonText }}
       />
     </SafeAreaView>
   );

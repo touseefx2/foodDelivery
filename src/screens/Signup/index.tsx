@@ -1,4 +1,4 @@
-import React, {useState, useRef} from 'react';
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
@@ -10,63 +10,63 @@ import {
   Keyboard,
   StatusBar,
   Platform,
-} from 'react-native';
-import {styles} from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import utils from '../../utils/index';
-import theme from '../../theme';
-import Toast from 'react-native-easy-toast';
-import MultipleImagePicker from '@baronha/react-native-multiple-image-picker';
-import {Image as ImageCompressor} from 'react-native-compressor';
+} from "react-native";
+import { styles } from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import utils from "../../utils/index";
+import theme from "../../theme";
+import Toast from "react-native-easy-toast";
+import MultipleImagePicker from "@baronha/react-native-multiple-image-picker";
+import { Image as ImageCompressor } from "react-native-compressor";
 import {
   responsiveFontSize,
   responsiveHeight,
-} from 'react-native-responsive-dimensions';
+} from "react-native-responsive-dimensions";
 
 export default observer(Signup);
 function Signup(props) {
   const toast = useRef(null);
-  const callingScreen = props.route.params.screen || '';
+  const callingScreen = props.route.params.screen || "";
   const phone = props.route.params.phone.slice(3);
-  const {registerLoader, location, attemptToRegister, notificationToken} =
+  const { registerLoader, location, attemptToRegister, notificationToken } =
     store.User;
-  const {apiLevel, isInternet} = store.General;
+  const { apiLevel, isInternet } = store.General;
 
   const [image, setImage] = useState(null);
-  const [name, setName] = useState('');
+  const [name, setName] = useState("");
 
   const [isShowFullImageModal, setIsShowFullImageModal] = useState(false);
-  const [fullImageUri, setFullImageUri] = useState('');
+  const [fullImageUri, setFullImageUri] = useState("");
 
   const goToHome = () => {
-    props.navigation.navigate('Home');
+    props.navigation.navigate("Home");
   };
 
   const goToCheckout = () => {
-    props.navigation.navigate('Checkout');
+    props.navigation.navigate("Checkout");
   };
 
   const multipleImagePicker = async (check: string) => {
     Keyboard.dismiss();
     try {
       const res = await MultipleImagePicker.openPicker({
-        mediaType: 'image',
+        mediaType: "image",
         isPreview: false,
         singleSelectedMode: true,
       });
       if (res) {
-        const {path, fileName, mime} = res;
+        const { path, fileName, mime } = res;
         ImageCompressor.compress(
-          Platform.OS == 'android' && parseInt(apiLevel) < 29
-            ? 'file://' + path
+          Platform.OS == "android" && parseInt(apiLevel) < 29
+            ? "file://" + path
             : path,
           {
-            compressionMethod: 'auto',
-          },
+            compressionMethod: "auto",
+          }
         )
-          .then(async res => {
-            if (check == 'profile') {
+          .then(async (res) => {
+            if (check == "profile") {
               setImage({
                 uri: res,
                 type: mime,
@@ -74,25 +74,25 @@ function Signup(props) {
               });
             }
           })
-          .catch(err => {
-            console.log('ImageCompressor error : ', err);
+          .catch((err) => {
+            console.log("ImageCompressor error : ", err);
           });
       }
     } catch (error) {
-      console.log('multileImagePicker error : ', error);
+      console.log("multileImagePicker error : ", error);
     }
   };
 
   const onClickRegister = () => {
     Keyboard.dismiss();
 
-    if (name.trim() == '') {
-      toast?.current?.show('Please enter your name');
+    if (name.trim() == "") {
+      toast?.current?.show("Please enter your name");
       return;
     }
 
     if (!utils.regularExpression.name.test(name.trim())) {
-      toast?.current?.show('Name is inavlid');
+      toast?.current?.show("Name is inavlid");
       return;
     }
 
@@ -100,23 +100,23 @@ function Signup(props) {
       attemptToRegister(
         {
           username: name.trim(),
-          mobile: '+92' + phone,
+          mobile: "+92" + phone,
           image: image,
-          role: 'customer',
+          role: "customer",
           city: location?.city?._id,
           registrationToken: notificationToken,
         },
         goToHome,
         goToCheckout,
-        callingScreen,
+        callingScreen
       );
-    } else toast?.current?.show('Please connect internet', 1000);
+    } else toast?.current?.show("Please connect internet", 1000);
   };
 
   const onclickProfile = (check: string) => {
     Keyboard.dismiss();
-    if (check == 'viewProfile') {
-      setFullImageUri({uri: image.uri});
+    if (check == "viewProfile") {
+      setFullImageUri({ uri: image.uri });
       setIsShowFullImageModal(true);
       return;
     }
@@ -129,7 +129,8 @@ function Signup(props) {
         activeOpacity={0.7}
         disabled={registerLoader}
         onPress={onClickRegister}
-        style={styles.button}>
+        style={styles.button}
+      >
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
     );
@@ -144,7 +145,7 @@ function Signup(props) {
       />
 
       <utils.StackHeader props={props} title="signup" />
-      <utils.Loader text={'Please wait'} load={registerLoader} />
+      <utils.Loader text={"Please wait"} load={registerLoader} />
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.main}>
           <View style={styles.Profile}>
@@ -153,8 +154,9 @@ function Signup(props) {
                 activeOpacity={0.8}
                 disabled={!image ? true : false}
                 onPress={() => {
-                  onclickProfile('viewProfile');
-                }}>
+                  onclickProfile("viewProfile");
+                }}
+              >
                 {!image ? (
                   <utils.vectorIcon.FontAwesome
                     name="user"
@@ -164,7 +166,7 @@ function Signup(props) {
                 ) : (
                   <Image
                     style={styles.ProfileImage}
-                    source={{uri: image?.uri || ''}}
+                    source={{ uri: image?.uri || "" }}
                   />
                 )}
               </TouchableOpacity>
@@ -172,9 +174,10 @@ function Signup(props) {
               <TouchableOpacity
                 activeOpacity={0.6}
                 onPress={() => {
-                  onclickProfile('profile');
+                  onclickProfile("profile");
                 }}
-                style={styles.ImageUploadConatiner}>
+                style={styles.ImageUploadConatiner}
+              >
                 <utils.vectorIcon.Ionicons
                   name="ios-camera"
                   color={theme.color.title}
@@ -188,7 +191,7 @@ function Signup(props) {
 
           <View style={styles.MobileInputContainer}>
             <Image
-              source={require('../../assets/images/flag/pakistan.png')}
+              source={require("../../assets/images/flag/pakistan.png")}
               style={styles.CountryLogo}
             />
 
@@ -196,7 +199,7 @@ function Signup(props) {
 
             <TextInput
               editable={false}
-              style={[styles.mobileInput, {width: '80%'}]}
+              style={[styles.mobileInput, { width: "80%" }]}
               maxLength={10}
               placeholderTextColor={theme.color.subTitleLight}
               keyboardType="phone-pad"
@@ -207,12 +210,12 @@ function Signup(props) {
           <TextInput
             style={[
               styles.input,
-              Platform.OS == 'ios' && {height: responsiveHeight(6.2)},
+              Platform.OS == "ios" && { height: responsiveHeight(6.2) },
             ]}
             placeholderTextColor={theme.color.subTitleLight}
             placeholder="Enter your name"
             value={name}
-            onChangeText={val => {
+            onChangeText={(val) => {
               setName(val);
             }}
           />
@@ -232,8 +235,8 @@ function Signup(props) {
         ref={toast}
         position="bottom"
         opacity={1}
-        style={{backgroundColor: theme.color.button1}}
-        textStyle={{color: theme.color.buttonText}}
+        style={{ backgroundColor: theme.color.button1 }}
+        textStyle={{ color: theme.color.buttonText }}
       />
     </SafeAreaView>
   );

@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from "react";
 import {
   Text,
   View,
@@ -8,28 +8,28 @@ import {
   BackHandler,
   Image,
   ScrollView,
-} from 'react-native';
-import {observer} from 'mobx-react';
-import styles from './styles';
-import theme from '../../theme';
-import store from '../../store';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
-import * as Animatable from 'react-native-animatable';
+} from "react-native";
+import { observer } from "mobx-react";
+import styles from "./styles";
+import theme from "../../theme";
+import store from "../../store";
+import { responsiveHeight } from "react-native-responsive-dimensions";
+import * as Animatable from "react-native-animatable";
 
 export default observer(OrderIndicationt);
 
 function OrderIndicationt(props) {
-  const {data} = props.route.params;
-  const orderId = data?.orderId || '123';
-  const {user} = store.User;
+  const { data } = props.route.params;
+  const orderId = data?.orderId || "123";
+  const { user } = store.User;
   const message = !user
     ? `Your order has been placed successfully.\n\nYour order number is ${orderId}.\n\nOur team will contact you shortly to confirm your order.\n\nPlease stay connected.`
     : `Your order has been placed successfully.\n\nYour order number is ${orderId}.\n\nYou can view your order status in order history.`;
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackButtonClick,
+      "hardwareBackPress",
+      handleBackButtonClick
     );
     return () => {
       subscription.remove();
@@ -45,7 +45,7 @@ function OrderIndicationt(props) {
   }
 
   const goToHome = () => {
-    props.navigation.navigate('Home');
+    props.navigation.navigate("Home");
   };
 
   return (
@@ -60,22 +60,23 @@ function OrderIndicationt(props) {
         <View style={styles.logoContainer}>
           <Image
             style={styles.logo}
-            source={require('../../assets/images/logo/success.gif')}
+            source={require("../../assets/images/logo/success.gif")}
           />
         </View>
 
         <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{width: '100%', marginTop: responsiveHeight(3)}}>
+          <View style={{ width: "100%", marginTop: responsiveHeight(3) }}>
             <Animatable.Text
               duration={3000}
               easing="ease-out"
               animation="shake"
-              style={styles.title}>
+              style={styles.title}
+            >
               Thank you!
             </Animatable.Text>
           </View>
 
-          <View style={{width: '100%', marginTop: responsiveHeight(5)}}>
+          <View style={{ width: "100%", marginTop: responsiveHeight(5) }}>
             <Text style={styles.Description}>{message}</Text>
           </View>
         </ScrollView>

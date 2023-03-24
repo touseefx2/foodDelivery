@@ -65,17 +65,15 @@ class orders {
   @action.bound
   attempToPlaceOrder = (order, props) => {
     this.setPlaceOrderLoader(true);
-    db.hitApi(db.apis.PLACE_ORDER, 'post', order, '')
+    db.hitApi(db.apis.PLACE_ORDER, 'post', order, null)
       ?.then(resp => {
-        props.navigation.navigate('OrderIndication', {
-          data: resp.data.data || null,
-        });
+        props.navigation.navigate('OrderIndication', {data: resp.data || null});
         this.setPlaceOrderLoader(false);
         store.User.clearCart();
       })
       .catch(err => {
         this.setPlaceOrderLoader(false);
-        const msg = err.response.data.message || err.response.status;
+        let msg = err.response.data.message || err.response.status;
         console.log(`Error in ${db.apis.PLACE_ORDER} : `, msg);
         Alert.alert('', msg);
       });

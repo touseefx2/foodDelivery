@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from "react";
 import {
   View,
   SafeAreaView,
@@ -6,27 +6,27 @@ import {
   Keyboard,
   StatusBar,
   BackHandler,
-} from 'react-native';
-import styles from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import utils from '../../utils/index';
-import Toast from 'react-native-easy-toast';
-import NetInfo from '@react-native-community/netinfo';
-import {isPointInPolygon, getCenterOfBounds} from 'geolib';
-import Cross from './components/Cross';
-import Logo from './components/Logo';
-import Main from './components/Main';
-import theme from '../../theme';
-import Geolocation from 'react-native-geolocation-service';
-import {Permisiions} from '../../utils/Permissions';
+} from "react-native";
+import styles from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import utils from "../../utils/index";
+import Toast from "react-native-easy-toast";
+import NetInfo from "@react-native-community/netinfo";
+import { isPointInPolygon, getCenterOfBounds } from "geolib";
+import Cross from "./components/Cross";
+import Logo from "./components/Logo";
+import Main from "./components/Main";
+import theme from "../../theme";
+import Geolocation from "react-native-geolocation-service";
+import { Permisiions } from "../../utils/Permissions";
 
 export default observer(Location);
 function Location(props) {
   const toast = useRef(null);
-  const callingScreen = props?.route?.params?.screen || '';
-  const {isInternet, isLocation, setIsLocation, appName} = store.General;
-  const {setgetDataOnce, setFood, setsliderImages} = store.Food;
+  const callingScreen = props?.route?.params?.screen || "";
+  const { isInternet, isLocation, setIsLocation, appName } = store.General;
+  const { setgetDataOnce, setFood, setsliderImages } = store.Food;
   const {
     polygons,
     CityAreaData,
@@ -57,15 +57,15 @@ function Location(props) {
 
   useEffect(() => {
     if (isInternet) {
-      if (callingScreen != 'home') getAllData(setGetDataOnce, () => {});
+      if (callingScreen != "home") getAllData(setGetDataOnce, () => {});
       else getCitiesandAreas(setGetDataOnce);
     }
   }, [isInternet]);
 
   useEffect(() => {
     const subscription = BackHandler.addEventListener(
-      'hardwareBackPress',
-      handleBackButtonClick,
+      "hardwareBackPress",
+      handleBackButtonClick
     );
     return () => {
       subscription.remove();
@@ -87,14 +87,14 @@ function Location(props) {
     if (getDataOnce && CityAreaData.length > 0) {
       let cityList = [];
       let polygonsList = [];
-      CityAreaData.map(item => {
+      CityAreaData.map((item) => {
         if (item.city) {
           cityList.push(item.city);
         }
         if (item.areas && item.areas.length > 0) {
-          item.areas.map(item2 => {
+          item.areas.map((item2) => {
             if (item2.latlngs && item2.latlngs.length > 0) {
-              const coordinatesPoints = item2.latlngs.map(({lat, lng}) => ({
+              const coordinatesPoints = item2.latlngs.map(({ lat, lng }) => ({
                 latitude: parseFloat(lat),
                 longitude: parseFloat(lng),
               }));
@@ -126,7 +126,7 @@ function Location(props) {
     if (!props.navigation.isFocused()) {
       return false;
     }
-    if (callingScreen != 'home') {
+    if (callingScreen != "home") {
       BackHandler.exitApp();
       return;
     }
@@ -139,7 +139,7 @@ function Location(props) {
   const getCurrentLocation = () => {
     setLoader(true);
     Geolocation.getCurrentPosition(
-      async position => {
+      async (position) => {
         setCurrentLocation({
           coords: {
             latitude: position.coords.latitude,
@@ -153,22 +153,22 @@ function Location(props) {
           longitude: position.coords.longitude,
         });
       },
-      error => {
-        console.log('getCurrentLocation error : ', error.message);
+      (error) => {
+        console.log("getCurrentLocation error : ", error.message);
         setLoader(false);
-        setCityInList('first', null);
+        setCityInList("first", null);
       },
       {
         enableHighAccuracy: true,
         timeout: 20000,
         maximumAge: 10000,
-      },
+      }
     );
   };
 
   const setCityInList = (check, city) => {
     setLoader(false);
-    const isFirst = check == 'first' ? true : false;
+    const isFirst = check == "first" ? true : false;
     const areaLists = CityAreaData.find(function (item) {
       if (isFirst) return item.city._id === cityList[0]._id;
       else return item.city._id === city._id;
@@ -180,7 +180,7 @@ function Location(props) {
   };
 
   const getCenterCoordinatesOfPolygons = (area, city) => {
-    const coordsPoints = area.latlngs.map(({lat, lng}) => ({
+    const coordsPoints = area.latlngs.map(({ lat, lng }) => ({
       latitude: parseFloat(lat),
       longitude: parseFloat(lng),
     }));
@@ -199,7 +199,7 @@ function Location(props) {
     setSelectedArea(area);
   };
 
-  const isCurrentLocationExistInPolygons = currentLocationPoints => {
+  const isCurrentLocationExistInPolygons = (currentLocationPoints) => {
     let isPointExist = false;
     if (polygons.length > 0 && CityAreaData.length > 0) {
       for (let index = 0; index < polygons.length; index++) {
@@ -225,9 +225,9 @@ function Location(props) {
           break;
         }
       }
-      console.log('ISPointInPolygon: ', isPointExist);
+      console.log("ISPointInPolygon: ", isPointExist);
       if (!isPointExist) {
-        setCityInList('first', null);
+        setCityInList("first", null);
         return;
       }
     } else {
@@ -246,7 +246,7 @@ function Location(props) {
       longitude: currentLocation?.coords.longitude,
     };
     const isPointExist = isPointInPolygon(point, area.latlngs);
-    console.log('ISPointInAreaPolygon: ', isPointExist);
+    console.log("ISPointInAreaPolygon: ", isPointExist);
     if (isPointExist) {
       setSelectedArea(area);
       setSelectedCity(city);
@@ -276,10 +276,10 @@ function Location(props) {
 
   const locateOnMap = () => {
     closeAllDropDown();
-    NetInfo.fetch().then(state => {
+    NetInfo.fetch().then((state) => {
       if (state.isConnected) {
         if (selectedCity != null)
-          props.navigation.navigate('Map', {
+          props.navigation.navigate("Map", {
             city: selectedCity,
             area: selectedArea,
             selectedLocation: selectedLocation,
@@ -287,9 +287,9 @@ function Location(props) {
             setcity: setSelectedCity,
             setarea: setSelectedArea,
           });
-        else toast?.current?.show('Please select city', 1000);
+        else toast?.current?.show("Please select city", 1000);
       } else {
-        toast?.current?.show('Please connect internet', 1000);
+        toast?.current?.show("Please connect internet", 1000);
       }
     });
   };
@@ -297,15 +297,15 @@ function Location(props) {
   const onClickConfirm = () => {
     closeAllDropDown();
     if (selectedCity == null) {
-      toast?.current?.show('Please select city', 1000);
+      toast?.current?.show("Please select city", 1000);
       return;
     }
     if (selectedArea == null) {
-      toast?.current?.show('Please select area', 1000);
+      toast?.current?.show("Please select area", 1000);
       return;
     }
 
-    NetInfo.fetch().then(state => {
+    NetInfo.fetch().then((state) => {
       if (state.isConnected) {
         setgetDataOnce(false);
         setFood([]);
@@ -313,13 +313,13 @@ function Location(props) {
         setResturnatDetials(null);
         clearCart();
         setLocation(selectedLocation);
-        if (callingScreen == 'home') {
+        if (callingScreen == "home") {
           props.route.params.setIsReferesh(true);
           props.route.params.setDistance(0);
           props.navigation.goBack();
         }
       } else {
-        toast?.current?.show('Please connect internet', 1000);
+        toast?.current?.show("Please connect internet", 1000);
       }
     });
   };
@@ -359,8 +359,8 @@ function Location(props) {
         ref={toast}
         position="bottom"
         opacity={0.9}
-        style={{backgroundColor: theme.color.button1}}
-        textStyle={{color: theme.color.buttonText}}
+        style={{ backgroundColor: theme.color.button1 }}
+        textStyle={{ color: theme.color.buttonText }}
       />
     </SafeAreaView>
   );

@@ -1,33 +1,33 @@
-import {observable, makeObservable, action} from 'mobx';
-import {persist} from 'mobx-persist';
-import store from '../index';
-import db from '../../database/index';
-import {Alert} from 'react-native';
+import { observable, makeObservable, action } from "mobx";
+import { persist } from "mobx-persist";
+import store from "../index";
+import db from "../../database/index";
+import { Alert } from "react-native";
 
 class user {
   constructor() {
     makeObservable(this);
   }
 
-  @observable cart = {totalbill: 0, totalitems: 0, data: []};
+  @observable cart = { totalbill: 0, totalitems: 0, data: [] };
   @observable loader = false;
   @observable loginLoader = false;
   @observable registerLoader = false;
 
   @observable CityAreaData = [];
   @observable CityAreaLoader = false;
-  @observable notificationToken = '';
-  @persist @observable authToken = '';
+  @observable notificationToken = "";
+  @persist @observable authToken = "";
 
-  @persist('object') @observable favouriteFoodList = [];
+  @persist("object") @observable favouriteFoodList = [];
 
-  @persist('object') @observable location = null; //save selected location
+  @persist("object") @observable location = null; //save selected location
   @observable currentLocation = null; //curent location
-  @persist('object') @observable resturantDetails = null; //resturant detail
-  @persist('object') @observable user = null;
-  @persist('object') @observable polygons = [];
+  @persist("object") @observable resturantDetails = null; //resturant detail
+  @persist("object") @observable user = null;
+  @persist("object") @observable polygons = [];
 
-  @action setCart = obj => {
+  @action setCart = (obj) => {
     this.cart = obj;
   };
 
@@ -42,23 +42,23 @@ class user {
     this.cart.data = [];
   };
 
-  @action setloginLoader = obj => {
+  @action setloginLoader = (obj) => {
     this.loginLoader = obj;
   };
 
-  @action setRegisterLoader = obj => {
+  @action setRegisterLoader = (obj) => {
     this.registerLoader = obj;
   };
 
-  @action setLocation = obj => {
+  @action setLocation = (obj) => {
     this.location = obj;
   };
 
-  @action setCityAreaData = obj => {
+  @action setCityAreaData = (obj) => {
     this.CityAreaData = obj;
   };
 
-  @action setCityAreaLoader = obj => {
+  @action setCityAreaLoader = (obj) => {
     this.CityAreaLoader = obj;
   };
 
@@ -67,15 +67,15 @@ class user {
     this.polygons = val;
   }
 
-  @action setLoader = obj => {
+  @action setLoader = (obj) => {
     this.loader = obj;
   };
 
-  @action setCurrentLocation = obj => {
+  @action setCurrentLocation = (obj) => {
     this.currentLocation = obj;
   };
 
-  @action setResturnatDetials = obj => {
+  @action setResturnatDetials = (obj) => {
     this.resturantDetails = obj;
   };
 
@@ -101,17 +101,17 @@ class user {
     this.user = val;
   }
 
-  @action setFavouriteFoodList = obj => {
+  @action setFavouriteFoodList = (obj) => {
     this.favouriteFoodList = obj;
   };
 
   @action updateSpecificObjectInCart = (index, action) => {
-    const cartArr = {...this.cart};
+    const cartArr = { ...this.cart };
     if (cartArr.data.length > 0) {
       const item = cartArr.data[index];
-      if (action === 'add') {
+      if (action === "add") {
         item.quantity++;
-      } else if (action === 'subtract') {
+      } else if (action === "subtract") {
         if (item.quantity > 1) {
           item.quantity--;
         } else {
@@ -128,11 +128,7 @@ class user {
     try {
       this.getCitiesandAreas(setGetDataOnce);
       if (this.location) {
-        store.Food.getSliderImages(
-          this.location.city,
-          this.location.area,
-          setGetDistanceOnce,
-        );
+        store.Food.getSliderImages(this.location.city, setGetDistanceOnce);
       }
       if (this.user) {
         store.Orders.getOrderById();
@@ -147,13 +143,13 @@ class user {
   @action.bound
   getCitiesandAreas(setGetDataOnce) {
     this.setCityAreaLoader(true);
-    db.hitApi(db.apis.GET_CITIES_AREAS, 'get', null, '')
+    db.hitApi(db.apis.GET_CITIES_AREAS, "get", null, null)
       ?.then((resp: any) => {
         if (resp.data.data.length > 0) {
           this.setCityAreaData(
             resp.data.data.filter(
-              data => data.city.isActive == true && data.areas?.length > 0,
-            ),
+              (data) => data.city.isActive == true && data.areas?.length > 0
+            )
           );
         } else {
           this.setCityAreaData([]);
@@ -161,12 +157,12 @@ class user {
         setGetDataOnce(true);
         this.setCityAreaLoader(false);
       })
-      .catch(err => {
+      .catch((err) => {
         this.setCityAreaLoader(false);
         store.General.checkServer(err);
         let msg = err.response.data.message || err.response.status;
         console.log(`Error in ${db.apis.GET_CITIES_AREAS} : `, msg);
-        if (msg == 'No records found') {
+        if (msg == "No records found") {
           this.setCityAreaData([]);
           setGetDataOnce(true);
           return;
@@ -179,41 +175,41 @@ class user {
     goToHome,
     goToSignup,
     goToCheckout,
-    callingScreen,
+    callingScreen
   ) {
     this.setloginLoader(true);
 
     db.hitApi(
       db.apis.LOGIN_USER,
-      'post',
+      "post",
       {
         mobile,
         registrationToken: this.notificationToken,
       },
-      '',
+      null
     )
       ?.then((resp: any) => {
         this.setloginLoader(false);
         if (!resp.data.doc.isActive) {
           Alert.alert(
-            '',
-            'Your account has been blocked. Please contact customer support',
+            "",
+            "Your account has been blocked. Please contact customer support",
             [
               {
-                text: 'OK',
+                text: "OK",
                 onPress: () =>
                   this.Logout(
-                    callingScreen == 'checkout' ? goToCheckout : goToHome,
+                    callingScreen == "checkout" ? goToCheckout : goToHome
                   ),
               },
-            ],
+            ]
           );
           return;
         } else if (resp.data.doc.isActive) {
           this.addUser(resp.data.token, resp.data.doc);
           store.Orders.getOrderById();
           store.Promos.getPromoById();
-          if (callingScreen == 'checkout') {
+          if (callingScreen == "checkout") {
             goToCheckout();
             return;
           }
@@ -221,13 +217,13 @@ class user {
           goToHome();
         }
       })
-      .catch(err => {
+      .catch((err) => {
         this.setloginLoader(false);
 
         let msg = err.response.data.message || err.response.status;
         console.log(`Error in ${db.apis.LOGIN_USER} : `, msg);
 
-        if (msg == 'User Not Registered') {
+        if (msg == "User Not Registered") {
           goToSignup();
           return;
         }
@@ -236,22 +232,22 @@ class user {
           msg == `Inactive users can't login. Please contact customer support`
         ) {
           Alert.alert(
-            '',
-            'Your account has been blocked. Please contact customer support',
+            "",
+            "Your account has been blocked. Please contact customer support",
             [
               {
-                text: 'OK',
+                text: "OK",
                 onPress: () =>
                   this.Logout(
-                    callingScreen == 'checkout' ? goToCheckout : goToHome,
+                    callingScreen == "checkout" ? goToCheckout : goToHome
                   ),
               },
-            ],
+            ]
           );
           return;
         }
 
-        Alert.alert('', msg);
+        Alert.alert("", msg);
       });
   }
 
@@ -259,77 +255,77 @@ class user {
   attemptToGetUser() {
     db.hitApi(
       db.apis.GET_USER_BY_ID + this.user._id,
-      'get',
+      "get",
       null,
-      this.authToken,
+      this.authToken
     )
       ?.then((resp: any) => {
         this.setUser(resp.data.data[0]);
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(
           `Error in ${db.apis.GET_USER_BY_ID} : `,
-          err.response.data.message,
+          err.response.data.message
         );
-        if (err.response.data.message == 'No records found')
+        if (err.response.data.message == "No records found")
           this.Logout(() => {});
       });
   }
 
   @action.bound
   attemptToRegister(body, goToHome, goToCheckout, callingScreen) {
-    const {image} = body;
+    const { image } = body;
     this.setRegisterLoader(true);
     if (image) {
       const data = new FormData();
-      data.append('files', {
+      data.append("files", {
         uri: image.uri,
         type: image.type,
         name: image.fileName,
       });
       fetch(db.apis.BASE_URL + db.apis.IMAGE_UPLOAD, {
-        method: 'post',
+        method: "post",
         body: data,
         headers: {
-          'Content-Type': 'multipart/form-data',
+          "Content-Type": "multipart/form-data",
         },
       })
-        .then(response => response.json())
-        .then(responseData => {
-          body.image = responseData?.data[0]?.imgrUrl || '';
+        .then((response) => response.json())
+        .then((responseData) => {
+          body.image = responseData?.data[0]?.imgrUrl || "";
           this.registerUser(body, goToHome, goToCheckout, callingScreen);
           return;
         })
-        .catch(err => {
+        .catch((err) => {
           this.setRegisterLoader(false);
           const msg = err.response.data.message || err.response.status || err;
-          console.log('Error in Upload Images arr', msg);
+          console.log("Error in Upload Images arr", msg);
         });
     } else {
-      body.image = '';
+      body.image = "";
       this.registerUser(body, goToHome, goToCheckout, callingScreen);
     }
   }
 
   @action.bound
   registerUser(body, goToHome, goToCheckout, callingScreen) {
-    db.hitApi(db.apis.REGISTER_USER, 'post', body, '')
-      ?.then(resp => {
+    db.hitApi(db.apis.REGISTER_USER, "post", body, null)
+      ?.then((resp) => {
         this.setRegisterLoader(false);
         this.addUser(resp.data.token, resp.data.data);
         store.Orders.getOrderById();
         store.Promos.getPromoById();
-        if (callingScreen == 'checkout') {
+        if (callingScreen == "checkout") {
           goToCheckout();
           return;
         }
         goToHome();
       })
-      .catch(err => {
+      .catch((err) => {
         this.setRegisterLoader(false);
         const msg = err.response.data.message || err.response.status || err;
         console.log(`Error in ${db.apis.REGISTER_USER} : `, msg);
-        Alert.alert('', msg);
+        Alert.alert("", msg);
       });
   }
 
@@ -339,7 +335,7 @@ class user {
     store.Promos.setpromos([]);
     store.Orders.setOrders([]);
     this.setFavouriteFoodList([]);
-    this.addauthToken('');
+    this.addauthToken("");
     goToHome();
   }
 }

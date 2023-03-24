@@ -1,12 +1,12 @@
-import store from '../../store';
+import store from "../../store";
 
-let background = ''; // Main Background color
-let backgroundLight = '';
-let title = ''; // Main text color
-let subTitle = ''; // Main light text color
-let subTitleLight = ''; // Main super light text color
-let button1 = ''; // Main Button Background color Note: pls don't same Main Background Color
-let buttonText = '';
+let background = ""; // Main Background color
+let backgroundLight = "";
+let title = ""; // Main text color
+let subTitle = ""; // Main light text color
+let subTitleLight = ""; // Main super light text color
+let button1 = ""; // Main Button Background color Note: pls don't same Main Background Color
+let buttonText = "";
 // ---> Note: button2 background (main background) and text/border color auto use button1Text color <----
 let Home_FooterCart_TopBorder_Width = 0;
 let TabBar_BottomBorder_Width = 0;
@@ -16,14 +16,14 @@ let Checkout_FooterCart_TopBorder_Width = 0;
 let Checkout_FooterType_TopBorder_Width = 0;
 let Loader_Border_Width = 0;
 
-if (store.Color.theme == 'white') {
-  background = '#FCFCFC';
-  backgroundLight = '#ebebeb';
-  title = 'black';
-  subTitle = '#393939';
-  subTitleLight = 'rgba(0, 0, 0, 0.5)';
-  button1 = '#FE774C';
-  buttonText = 'white';
+if (store.Color.theme == "white") {
+  background = "#FCFCFC";
+  backgroundLight = "#ebebeb";
+  title = "black";
+  subTitle = "#393939";
+  subTitleLight = "rgba(0, 0, 0, 0.5)";
+  button1 = "#FE774C";
+  buttonText = "white";
   Home_FooterCart_TopBorder_Width = 0;
   TabBar_BottomBorder_Width = 0;
   Add_Item_TopBorder_Width = 0;
@@ -31,14 +31,14 @@ if (store.Color.theme == 'white') {
   Checkout_FooterCart_TopBorder_Width = 0;
   Checkout_FooterType_TopBorder_Width = 0;
   Loader_Border_Width = 0;
-} else if (store.Color.theme == 'black') {
-  background = 'black';
-  backgroundLight = '#363636';
-  title = 'white';
-  subTitle = '#f2f2f2';
-  subTitleLight = '#e8e8e8';
-  button1 = '#2475bf';
-  buttonText = 'white';
+} else if (store.Color.theme == "black") {
+  background = "black";
+  backgroundLight = "#363636";
+  title = "white";
+  subTitle = "#f2f2f2";
+  subTitleLight = "#e8e8e8";
+  button1 = "#2475bf";
+  buttonText = "white";
   Home_FooterCart_TopBorder_Width = 0.3;
   TabBar_BottomBorder_Width = 0.3;
   Add_Item_TopBorder_Width = 0.3;
@@ -46,14 +46,14 @@ if (store.Color.theme == 'white') {
   Checkout_FooterCart_TopBorder_Width = 0.3;
   Checkout_FooterType_TopBorder_Width = 0.3;
   Loader_Border_Width = 0.8;
-} else if (store.Color.theme == 'brown') {
-  background = '#1e1b22';
-  backgroundLight = '#28252d';
-  title = 'white';
-  subTitle = '#f2f2f2';
-  subTitleLight = '#e8e8e8';
-  button1 = '#eca606';
-  buttonText = 'white';
+} else if (store.Color.theme == "brown") {
+  background = "#1e1b22";
+  backgroundLight = "#28252d";
+  title = "white";
+  subTitle = "#f2f2f2";
+  subTitleLight = "#e8e8e8";
+  button1 = "#eca606";
+  buttonText = "white";
   Home_FooterCart_TopBorder_Width = 0.3;
   TabBar_BottomBorder_Width = 0.3;
   Add_Item_TopBorder_Width = 0.3;

@@ -1,11 +1,11 @@
-import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import {styles} from './../styles';
-import theme from '../../../theme';
-import utils from '../../../utils';
-import store from '../../../store';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
-import ProductAvailabilitySheet from './ProductAvailabilitySheet';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import { styles } from "./../styles";
+import theme from "../../../theme";
+import utils from "../../../utils";
+import store from "../../../store";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
+import ProductAvailabilitySheet from "./ProductAvailabilitySheet";
 
 export default function Bottom({
   numOfItems,
@@ -44,14 +44,14 @@ export default function Bottom({
     } else if (object1Variants.length != object2Variants.length) {
       isSameProduct = false;
     } else if (object1Variants.length == object2Variants.length) {
-      const t1 = object1Variants.map(item => {
+      const t1 = object1Variants.map((item) => {
         return Object.entries(item).sort().toString();
       });
-      const t2 = object2Variants.map(item => {
+      const t2 = object2Variants.map((item) => {
         return Object.entries(item).sort().toString();
       });
 
-      isSameProduct = t1.every(item => {
+      isSameProduct = t1.every((item) => {
         return t2.includes(item);
       });
     }
@@ -68,15 +68,15 @@ export default function Bottom({
     goBack();
   };
 
-  const addProductInCart = check => {
-    const cartArr = {...cart};
+  const addProductInCart = (check) => {
+    const cartArr = { ...cart };
     let variantsList = [];
     let isRequired = false;
     let bill = 0;
     let obj = null;
     let data = null;
     let isSameProduct = false;
-    let image = food.image || '';
+    let image = food.image || "";
     let matchIndex = -1;
 
     if (baseVariants.length > 0 && baseVariants[0].details.length > 0) {
@@ -84,29 +84,29 @@ export default function Bottom({
         .filter(function (item) {
           return item.isSel;
         })
-        .forEach(element => {
+        .forEach((element) => {
           if (element.isRequire == true) isRequired = true;
-          const obj = {...element};
+          const obj = { ...element };
           delete obj.isSel;
           variantsList.push(obj);
         });
     }
 
-    additionalVariants.forEach(element => {
+    additionalVariants.forEach((element) => {
       if (element.details.length > 0) {
         element.details
           .filter(function (item) {
             return item.isSel;
           })
-          .forEach(item2 => {
-            const obj = {...item2};
+          .forEach((item2) => {
+            const obj = { ...item2 };
             delete obj.isSel;
             variantsList.push(obj);
           });
       }
     });
 
-    variantsList.forEach(item => {
+    variantsList.forEach((item) => {
       bill = bill + parseFloat(item.price);
     });
 
@@ -118,8 +118,8 @@ export default function Bottom({
     obj = {
       uid: cartArr.data.length + 1,
       productId: productId,
-      productName: food.title || '',
-      description: food.description || '---',
+      productName: food.title || "",
+      description: food.description || "---",
       quantity: numOfItems,
       price: food.price,
       bill: bill,
@@ -134,15 +134,15 @@ export default function Bottom({
     });
 
     if (arr.length > 0) {
-      if (check == 'withVariant') {
+      if (check == "withVariant") {
         for (let index = 0; index < arr.length; index++) {
           const item = arr[index];
           data = item;
-          const object1 = {...item};
-          const object2 = {...obj};
+          const object1 = { ...item };
+          const object2 = { ...obj };
           isSameProduct = checkIsObjectEqual(object1, object2);
           if (isSameProduct) {
-            const objIndex = cartArr.data.findIndex(element => {
+            const objIndex = cartArr.data.findIndex((element) => {
               return element.uid === item.uid;
             });
             matchIndex = objIndex;
@@ -153,7 +153,7 @@ export default function Bottom({
         if (isSameProduct) {
           increaseQuantityOfSameProductInCart(cartArr, matchIndex);
           return;
-        } else image = data.image || '';
+        } else image = data.image || "";
       } else {
         if (matchIndex > -1) {
           increaseQuantityOfSameProductInCart(cartArr, matchIndex);
@@ -192,18 +192,20 @@ export default function Bottom({
               let c = numOfItems;
               --c;
               setnumOfItems(c);
-            }}>
+            }}
+          >
             <utils.vectorIcon.AntDesign
               name="minus"
               color={theme.color.buttonText}
               size={responsiveFontSize(2.95)}
             />
           </TouchableOpacity>
-          <View style={{width: '30%'}}>
+          <View style={{ width: "30%" }}>
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.buttomCountText}>
+              style={styles.buttomCountText}
+            >
               {numOfItems}
             </Text>
           </View>
@@ -215,7 +217,8 @@ export default function Bottom({
               let c = numOfItems;
               ++c;
               setnumOfItems(c);
-            }}>
+            }}
+          >
             <utils.vectorIcon.AntDesign
               name="plus"
               color={theme.color.buttonText}
@@ -229,19 +232,20 @@ export default function Bottom({
           disabled={isRequiredFieldEmpty}
           onPress={() =>
             addProductInCart(
-              !isEmptyVariants ? 'withVariant' : 'withoutVariant',
+              !isEmptyVariants ? "withVariant" : "withoutVariant"
             )
           }
           style={[
             styles.bottomRowWrapper2,
             {
               opacity:
-                isRequiredFieldEmpty && store.Color.theme == 'black' ? 0.6 : 1,
+                isRequiredFieldEmpty && store.Color.theme == "black" ? 0.6 : 1,
               backgroundColor: !isRequiredFieldEmpty
                 ? theme.color.button1
                 : theme.color.backgroundLight,
             },
-          ]}>
+          ]}
+        >
           <Text style={styles.botoomButtonText}>Add to cart</Text>
         </TouchableOpacity>
       </View>

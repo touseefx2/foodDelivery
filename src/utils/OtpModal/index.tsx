@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,33 +7,33 @@ import {
   KeyboardAvoidingView,
   Keyboard,
   Alert,
-} from 'react-native';
-import theme from '../../theme/index';
-import store from '../../store/index';
-import Modal from 'react-native-modal';
-import CountDown from 'react-native-countdown-component';
+} from "react-native";
+import theme from "../../theme/index";
+import store from "../../store/index";
+import Modal from "react-native-modal";
+import CountDown from "react-native-countdown-component";
 import {
   CodeField,
   Cursor,
   useBlurOnFulfill,
   useClearByFocusCell,
-} from 'react-native-confirmation-code-field';
-import auth from '@react-native-firebase/auth';
-import NetInfo from '@react-native-community/netinfo';
+} from "react-native-confirmation-code-field";
+import auth from "@react-native-firebase/auth";
+import NetInfo from "@react-native-community/netinfo";
 import {
   responsiveFontSize,
   responsiveHeight,
-} from 'react-native-responsive-dimensions';
-import styles from './styles';
+} from "react-native-responsive-dimensions";
+import styles from "./styles";
 
 export default function OtpModal(props) {
   const CELL_COUNT = 6;
   const activeOpacity = 0.8;
   const isModal = props.isModal;
-  const mobile = '+92' + props.phone || '';
-  const {resendOTPTime} = store.General;
+  const mobile = "+92" + props.phone || "";
+  const { resendOTPTime } = store.General;
 
-  const setisModal = isShow => {
+  const setisModal = (isShow) => {
     props.setisModal(isShow);
   };
   const setisVerify = (isVerify, phone) => {
@@ -46,29 +46,29 @@ export default function OtpModal(props) {
   const [seconds, setSeconds] = useState(resendOTPTime);
   const [isFinish, setFinish] = useState(false);
   const [confirmResult, setConfirmResult] = useState(null);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState("");
   const [prop, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
-  const ref = useBlurOnFulfill({value, cellCount: CELL_COUNT});
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
 
   useEffect(() => {
     const onAuthStateChangedUnsubscribe = auth().onAuthStateChanged(
-      async user => {
+      async (user) => {
         if (user) {
           setvLoader(false);
 
-          NetInfo.fetch().then(state => {
+          NetInfo.fetch().then((state) => {
             if (state.isConnected) {
               if (auth().currentUser) {
                 auth().currentUser.delete();
               }
               gotoNext();
-            } else Alert.alert('', 'Please connect internet.');
+            } else Alert.alert("", "Please connect internet.");
           });
         }
-      },
+      }
     );
     return () => {
       onAuthStateChangedUnsubscribe();
@@ -80,36 +80,36 @@ export default function OtpModal(props) {
   };
 
   async function SendOtpCode() {
-    NetInfo.fetch().then(state => {
+    NetInfo.fetch().then((state) => {
       if (state.isConnected) {
         setloader(true);
-        setValue('');
+        setValue("");
 
         auth()
           .signInWithPhoneNumber(mobile)
-          .then(res => {
-            console.log('confirmation : ', res);
+          .then((res) => {
+            console.log("confirmation : ", res);
             setloader(false);
             setSeconds(resendOTPTime);
             setsendCodeOnce(true);
             setConfirmResult(res);
             setFinish(false);
           })
-          .catch(error => {
-            console.log('signInWithPhoneNumber  error : ', error);
+          .catch((error) => {
+            console.log("signInWithPhoneNumber  error : ", error);
             setloader(false);
-            setValue('');
+            setValue("");
 
             var errorMessage = error.message;
-            var si = errorMessage.indexOf(']') + 1;
+            var si = errorMessage.indexOf("]") + 1;
             var ei = errorMessage.length - 1;
             const message = errorMessage.substr(si, ei);
-            Alert.alert('Failed', message);
+            Alert.alert("Failed", message);
           });
 
         return;
       } else {
-        Alert.alert('Network Error', 'Please check your internet connection');
+        Alert.alert("Network Error", "Please check your internet connection");
       }
     });
   }
@@ -120,28 +120,28 @@ export default function OtpModal(props) {
       setvLoader(true);
       await confirmResult.confirm(value);
     } catch (error) {
-      console.log('Verifyication Code  error: ', error);
+      console.log("Verifyication Code  error: ", error);
       setvLoader(false);
-      setValue('');
-      let errorMessage = '';
-      if (error.code == 'auth/unknown') {
+      setValue("");
+      let errorMessage = "";
+      if (error.code == "auth/unknown") {
         errorMessage =
-          'Cannot create PhoneAuthCredential without either verificationProof, sessionInfo, temporary proof, or enrollment ID !';
-      } else if (error.code == 'auth/invalid-verification-code') {
+          "Cannot create PhoneAuthCredential without either verificationProof, sessionInfo, temporary proof, or enrollment ID !";
+      } else if (error.code == "auth/invalid-verification-code") {
         errorMessage =
-          'Invalid verification code, Please enter correct confirmation code !';
-      } else if (error.code == 'auth/session-expired') {
+          "Invalid verification code, Please enter correct confirmation code !";
+      } else if (error.code == "auth/session-expired") {
         errorMessage =
-          'The sms code has expired or to many invalid code attempt. Please re-send the verification code to try again';
-      } else if (error.code == 'auth/network-request-failed') {
-        errorMessage = 'Network request failed , Please connect internet ! ';
+          "The sms code has expired or to many invalid code attempt. Please re-send the verification code to try again";
+      } else if (error.code == "auth/network-request-failed") {
+        errorMessage = "Network request failed , Please connect internet ! ";
       } else {
         var msg = error.message;
-        var si = msg.indexOf(']') + 1;
+        var si = msg.indexOf("]") + 1;
         var ei = msg.length - 1;
         errorMessage = msg.substr(si, ei);
       }
-      Alert.alert('Failed', errorMessage);
+      Alert.alert("Failed", errorMessage);
       return;
     }
   }
@@ -158,18 +158,19 @@ export default function OtpModal(props) {
           ref={ref}
           {...prop}
           value={value}
-          onChangeText={v => setValue(v.replace(/[^0-9]/, ''))}
+          onChangeText={(v) => setValue(v.replace(/[^0-9]/, ""))}
           onEndEditing={() => {}}
           editable={loader || vLoader || !sendCodeOnce ? false : true}
           cellCount={CELL_COUNT}
           rootStyle={styles.codeFieldRoot}
           keyboardType="number-pad"
           textContentType="oneTimeCode"
-          renderCell={({index, symbol, isFocused}) => (
+          renderCell={({ index, symbol, isFocused }) => (
             <View
               key={index}
               onLayout={getCellOnLayoutHandler(index)}
-              style={[styles.cell, isFocused && styles.focusCell]}>
+              style={[styles.cell, isFocused && styles.focusCell]}
+            >
               <Text style={styles.cellText}>
                 {symbol || (isFocused && <Cursor />)}
               </Text>
@@ -181,14 +182,15 @@ export default function OtpModal(props) {
   };
 
   const renderBottonButton1 = () => {
-    const text = 'Get Code';
+    const text = "Get Code";
     const disable = loader;
     return (
       <TouchableOpacity
         disabled={disable}
         activeOpacity={activeOpacity}
         onPress={SendOtpCode}
-        style={styles.Button}>
+        style={styles.Button}
+      >
         <>
           {!loader ? (
             <Text style={styles.ButtonText}>{text}</Text>
@@ -204,14 +206,15 @@ export default function OtpModal(props) {
   };
 
   const renderBottonButton11 = () => {
-    const text = 'Resend Code';
+    const text = "Resend Code";
     const disable = loader;
     return (
       <TouchableOpacity
         disabled={disable}
         activeOpacity={activeOpacity}
         onPress={SendOtpCode}
-        style={styles.Button}>
+        style={styles.Button}
+      >
         {!loader ? (
           <Text style={styles.ButtonText}>{text}</Text>
         ) : (
@@ -226,7 +229,7 @@ export default function OtpModal(props) {
 
   const renderBottonButton2 = () => {
     const disable = value.length < 6 || loader ? true : false;
-    const text = 'Confirm Code';
+    const text = "Confirm Code";
 
     return (
       <TouchableOpacity
@@ -236,12 +239,13 @@ export default function OtpModal(props) {
         style={[
           styles.Button,
           {
-            opacity: disable && store.Color.theme == 'black' ? 0.5 : 1,
+            opacity: disable && store.Color.theme == "black" ? 0.5 : 1,
             backgroundColor: disable
               ? theme.color.backgroundLight
               : theme.color.button1,
           },
-        ]}>
+        ]}
+      >
         <>
           {!disable ? (
             <>
@@ -265,14 +269,15 @@ export default function OtpModal(props) {
   };
 
   const renderBottonButton3 = () => {
-    const text = 'Cancel';
+    const text = "Cancel";
 
     return (
       <TouchableOpacity
         disabled={loader}
         activeOpacity={activeOpacity}
         onPress={closeModal}
-        style={styles.Buttonc}>
+        style={styles.Buttonc}
+      >
         <Text style={styles.ButtonTextc}>{text}</Text>
       </TouchableOpacity>
     );
@@ -286,10 +291,10 @@ export default function OtpModal(props) {
             size={14}
             until={seconds}
             onFinish={() => setFinish(true)}
-            digitStyle={{backgroundColor: 'transparent'}}
+            digitStyle={{ backgroundColor: "transparent" }}
             digitTxtStyle={styles.timerTitle}
-            timeToShow={['S']}
-            timeLabels={{s: null}}
+            timeToShow={["S"]}
+            timeLabels={{ s: null }}
             showSeparator
           />
         </>
@@ -300,17 +305,18 @@ export default function OtpModal(props) {
   return (
     <>
       <Modal
-        style={{padding: 0, margin: 0}}
+        style={{ padding: 0, margin: 0 }}
         backdropOpacity={0.4}
         onRequestClose={() => {
           if (!loader) {
             if ((sendCodeOnce && isFinish) || !sendCodeOnce) setisModal(false);
           }
         }}
-        isVisible={isModal}>
+        isVisible={isModal}
+      >
         <View style={styles.modalCont}>
           <KeyboardAvoidingView enabled>
-            <View style={{paddingVertical: 15, paddingHorizontal: 10}}>
+            <View style={{ paddingVertical: 15, paddingHorizontal: 10 }}>
               <Text style={styles.title}>Verify your mobile number</Text>
               <Text style={styles.subtitle}>
                 You will receive an OTP on your provided number {mobile}
@@ -324,7 +330,8 @@ export default function OtpModal(props) {
               paddingVertical: 15,
               paddingHorizontal: 10,
               marginTop: responsiveHeight(2),
-            }}>
+            }}
+          >
             {renderBottonButton2()}
 
             {!sendCodeOnce && renderBottonButton1()}

@@ -1,28 +1,29 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {SafeAreaView, Alert, Keyboard} from 'react-native';
-import styles from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import utils from '../../utils/index';
-import theme from '../../theme';
-import Toast from 'react-native-easy-toast';
-import {isPointInPolygon} from 'geolib';
-import Geolocation from 'react-native-geolocation-service';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import React, { useEffect, useRef, useState } from "react";
+import { SafeAreaView, Alert, Keyboard } from "react-native";
+import styles from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import utils from "../../utils/index";
+import theme from "../../theme";
+import Toast from "react-native-easy-toast";
+import { isPointInPolygon } from "geolib";
+import Geolocation from "react-native-geolocation-service";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 export default observer(OrderLocation);
 
 function OrderLocation(props) {
   const toast = useRef(null);
   const mapRef = useRef(null);
-  const {LONGITUDE_DELTA, LATITUDE_DELTA} = theme.window;
-  const {isInternet, setIsLocation} = store.General;
-  const {currentLocation, setCurrentLocation, location, polygons} = store.User;
+  const { LONGITUDE_DELTA, LATITUDE_DELTA } = theme.window;
+  const { isInternet, setIsLocation } = store.General;
+  const { currentLocation, setCurrentLocation, location, polygons } =
+    store.User;
   const selectedLocation = props.route.params.selectedLocation;
   const city = location?.city;
   const area = location?.area;
-  const polygon = polygons.filter(item => item.area._id == area._id) || [];
+  const polygon = polygons.filter((item) => item.area._id == area._id) || [];
 
   const [isRegionEnable, setIsRegionEnable] = useState(false);
   const [isCoordinatesExistInPolygons, setIsCoordinatesExistInPolygons] =
@@ -44,7 +45,7 @@ function OrderLocation(props) {
 
   const getCurrentLocation = () => {
     Geolocation.getCurrentPosition(
-      async position => {
+      async (position) => {
         setCurrentLocation({
           coords: {
             latitude: position.coords.latitude,
@@ -58,17 +59,17 @@ function OrderLocation(props) {
             latitude: position.coords.latitude,
             longitude: position.coords.longitude,
           },
-          () => {},
+          () => {}
         );
       },
-      error => {
-        console.log('getCurrentLocation error : ', error.message);
+      (error) => {
+        console.log("getCurrentLocation error : ", error.message);
       },
       {
         enableHighAccuracy: true,
         timeout: 20000,
         maximumAge: 10000,
-      },
+      }
     );
   };
 
@@ -84,7 +85,7 @@ function OrderLocation(props) {
     }
   };
 
-  const checkIsRegionPointsExistInPolygons = point => {
+  const checkIsRegionPointsExistInPolygons = (point) => {
     if (polygon.length > 0) {
       for (let index = 0; index < polygon.length; index++) {
         const item = polygon[index];
@@ -103,14 +104,14 @@ function OrderLocation(props) {
 
   const onClickConfirmLocation = () => {
     Keyboard.dismiss();
-    if (address.trim() == '') {
-      Alert.alert('', 'Please enter your complete street address');
+    if (address.trim() == "") {
+      Alert.alert("", "Please enter your complete street address");
       return;
     }
     props.route.params.setSelectedLocation({
       latitude: coords.latitude,
       longitude: coords.longitude,
-      address: area.name + ', ' + city.name,
+      address: area.name + ", " + city.name,
     });
     props.route.params.setAddress(address.trim());
     props.navigation.goBack();

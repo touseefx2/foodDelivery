@@ -1,15 +1,15 @@
-import React from 'react';
-import {StatusBar} from 'react-native';
-import store from '../../../store/index';
-import theme from '../../../theme';
+import React from "react";
+import { StatusBar } from "react-native";
+import store from "../../../store/index";
+import theme from "../../../theme";
 
-export default function StatusBarShow({isInternet, tagLine}) {
-  if (isInternet && tagLine == '')
+export default function StatusBarShow({ isInternet, tagLine }) {
+  if (isInternet && tagLine == "")
     return (
       <StatusBar
         translucent={true}
-        backgroundColor={'transparent'}
-        barStyle={'light-content'}
+        backgroundColor={"transparent"}
+        barStyle={"light-content"}
       />
     );
   else

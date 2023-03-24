@@ -1,22 +1,22 @@
-import React, {useState} from 'react';
-import {View, TouchableOpacity, Text, StatusBar} from 'react-native';
-import {styles} from './styles';
-import theme from '../../theme';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import store from '../../store';
+import React, { useState } from "react";
+import { View, TouchableOpacity, Text, StatusBar } from "react-native";
+import { styles } from "./styles";
+import theme from "../../theme";
+import { responsiveHeight } from "react-native-responsive-dimensions";
+import RBSheet from "react-native-raw-bottom-sheet";
+import store from "../../store";
 
-export default function UserCheckModal({props, rbSheet, screen, setIsCart}) {
+export default function UserCheckModal({ props, rbSheet, screen, setIsCart }) {
   const [heightBottomSheet, setHeightBottomSheet] = useState(0);
 
   const goToLogin = () => {
     rbSheet?.current?.close();
-    props.navigation.navigate('Login', {screen: screen});
+    props.navigation.navigate("Login", { screen: screen });
   };
 
   const goToGuest = () => {
     rbSheet?.current?.close();
-    if (screen == 'home') props.navigation.goBack();
+    if (screen == "home") props.navigation.goBack();
     else setIsCart(true);
   };
 
@@ -25,7 +25,8 @@ export default function UserCheckModal({props, rbSheet, screen, setIsCart}) {
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={goToLogin}
-        style={styles.BottomButton}>
+        style={styles.BottomButton}
+      >
         <Text style={styles.buttonTextBottom}>Continue with phone number</Text>
       </TouchableOpacity>
     );
@@ -36,8 +37,9 @@ export default function UserCheckModal({props, rbSheet, screen, setIsCart}) {
       <TouchableOpacity
         activeOpacity={0.6}
         onPress={goToGuest}
-        style={styles.BottomButton2}>
-        <Text style={[styles.buttonTextBottom, {color: theme.color.button1}]}>
+        style={styles.BottomButton2}
+      >
+        <Text style={[styles.buttonTextBottom, { color: theme.color.button1 }]}>
           Continue as Guest
         </Text>
       </TouchableOpacity>
@@ -62,22 +64,24 @@ export default function UserCheckModal({props, rbSheet, screen, setIsCart}) {
               : heightBottomSheet + responsiveHeight(7),
         },
         draggableIcon: styles.sheetDragIcon,
-      }}>
+      }}
+    >
       <StatusBar
         animated={false}
-        translucent={screen == 'home' ? true : false}
+        translucent={screen == "home" ? true : false}
         backgroundColor={
-          screen == 'home' ? theme.color.button1 : theme.color.background
+          screen == "home" ? theme.color.button1 : theme.color.background
         }
         barStyle={store.Color.statusBarText}
       />
 
       <View
-        onLayout={event => {
+        onLayout={(event) => {
           const height = event.nativeEvent.layout.height;
           setHeightBottomSheet(height);
         }}
-        style={styles.sheetMainConatiner}>
+        style={styles.sheetMainConatiner}
+      >
         <Text style={styles.sheetTitle}>Sign up or log in</Text>
 
         <View style={styles.sheetBottom}>

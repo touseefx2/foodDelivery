@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -9,31 +9,31 @@ import {
   ActivityIndicator,
   Keyboard,
   StatusBar,
-} from 'react-native';
-import {styles} from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import utils from '../../utils/index';
-import theme from '../../theme';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+} from "react-native";
+import { styles } from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import utils from "../../utils/index";
+import theme from "../../theme";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default observer(Setting);
 function Setting(props) {
-  const {user, Logout} = store.User;
+  const { user, Logout } = store.User;
 
-  const userName = user.username || '';
-  const phone = user.mobile || '';
+  const userName = user.username || "";
+  const phone = user.mobile || "";
   const imageSrc =
-    user?.image != ''
-      ? {uri: user.image}
-      : require('../../assets/images/profile/profileimage.png');
+    user?.image != ""
+      ? { uri: user.image }
+      : require("../../assets/images/profile/profileimage.png");
 
   const [isImageLoad, setIsImageLoad] = useState(false);
   const [isShowFullImageModal, setIsShowFullImageModal] = useState(false);
-  const [fullImageUri, setFullImageUri] = useState('');
+  const [fullImageUri, setFullImageUri] = useState("");
 
   const goHome = () => {
-    props.navigation.navigate('Home');
+    props.navigation.navigate("Home");
   };
 
   const onclickImage = () => {
@@ -49,10 +49,10 @@ function Setting(props) {
       <StatusBar
         translucent={false}
         backgroundColor={
-          !isShowFullImageModal ? theme.color.background : '#2b2b2b'
+          !isShowFullImageModal ? theme.color.background : "#2b2b2b"
         }
         barStyle={
-          !isShowFullImageModal ? store.Color.statusBarText : 'light-content'
+          !isShowFullImageModal ? store.Color.statusBarText : "light-content"
         }
       />
       <utils.StackHeader props={props} title="setting" />
@@ -62,8 +62,9 @@ function Setting(props) {
           <View style={styles.imageView}>
             <TouchableOpacity
               activeOpacity={0.8}
-              disabled={user?.image != '' ? false : true}
-              onPress={onclickImage}>
+              disabled={user?.image != "" ? false : true}
+              onPress={onclickImage}
+            >
               <Image
                 onLoadStart={() => {
                   setIsImageLoad(false);
@@ -80,25 +81,27 @@ function Setting(props) {
                   color={theme.color.button1}
                   style={{
                     top: responsiveFontSize(12 / 3),
-                    position: 'absolute',
-                    alignSelf: 'center',
+                    position: "absolute",
+                    alignSelf: "center",
                   }}
                 />
               )}
             </TouchableOpacity>
           </View>
 
-          <View style={{width: '69%'}}>
+          <View style={{ width: "69%" }}>
             <Text
               style={styles.nameTitle}
               numberOfLines={1}
-              ellipsizeMode="tail">
+              ellipsizeMode="tail"
+            >
               {userName}
             </Text>
             <Text
               style={styles.phoneTitle}
               numberOfLines={1}
-              ellipsizeMode="tail">
+              ellipsizeMode="tail"
+            >
               +{phone}
             </Text>
           </View>
@@ -110,8 +113,9 @@ function Setting(props) {
 
         <TouchableOpacity
           activeOpacity={activeOpacity}
-          onPress={() => props.navigation.navigate('OrderStack')}
-          style={styles.buttonRow}>
+          onPress={() => props.navigation.navigate("OrderStack")}
+          style={styles.buttonRow}
+        >
           <View style={styles.row90Percent}>
             <utils.vectorIcon.MaterialCommunityIcons
               name="microsoft-xbox-controller-menu"
@@ -121,7 +125,8 @@ function Setting(props) {
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.buttonText}>
+              style={styles.buttonText}
+            >
               My Orders
             </Text>
           </View>
@@ -136,9 +141,10 @@ function Setting(props) {
         <TouchableOpacity
           activeOpacity={activeOpacity}
           onPress={() => {
-            props.navigation.navigate('Favourite');
+            props.navigation.navigate("Favourite");
           }}
-          style={styles.buttonRow}>
+          style={styles.buttonRow}
+        >
           <View style={styles.row90Percent}>
             <utils.vectorIcon.Ionicons
               name="heart-circle-sharp"
@@ -148,7 +154,8 @@ function Setting(props) {
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.buttonText}>
+              style={styles.buttonText}
+            >
               My Favourites
             </Text>
           </View>
@@ -166,8 +173,9 @@ function Setting(props) {
 
         <TouchableOpacity
           activeOpacity={activeOpacity}
-          onPress={() => props.navigation.navigate('PromoStack')}
-          style={styles.buttonRow}>
+          onPress={() => props.navigation.navigate("PromoStack")}
+          style={styles.buttonRow}
+        >
           <View style={styles.row90Percent}>
             <utils.vectorIcon.MaterialIcons
               name="money-off"
@@ -177,7 +185,8 @@ function Setting(props) {
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.buttonText}>
+              style={styles.buttonText}
+            >
               Promos
             </Text>
           </View>
@@ -193,7 +202,8 @@ function Setting(props) {
         <TouchableOpacity
           activeOpacity={activeOpacity}
           onPress={() => Logout(goHome)}
-          style={styles.buttonRow}>
+          style={styles.buttonRow}
+        >
           <View style={styles.row90Percent}>
             <utils.vectorIcon.MaterialCommunityIcons
               name="logout"
@@ -203,7 +213,8 @@ function Setting(props) {
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.buttonText}>
+              style={styles.buttonText}
+            >
               Logout
             </Text>
           </View>
@@ -214,7 +225,7 @@ function Setting(props) {
           />
         </TouchableOpacity>
 
-        <View style={[styles.separator, {height: 0}]} />
+        <View style={[styles.separator, { height: 0 }]} />
       </ScrollView>
 
       <utils.FullImage

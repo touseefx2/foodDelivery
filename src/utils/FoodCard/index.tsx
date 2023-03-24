@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -6,44 +6,44 @@ import {
   StatusBar,
   Modal,
   TouchableWithoutFeedback,
-} from 'react-native';
-import styles from './styles';
-import theme from '../../theme';
+} from "react-native";
+import styles from "./styles";
+import theme from "../../theme";
 import {
   responsiveFontSize,
   responsiveHeight,
-} from 'react-native-responsive-dimensions';
-import NetInfo from '@react-native-community/netinfo';
-import utils from '../../utils';
-import ProgressiveFastImage from '@freakycoder/react-native-progressive-fast-image';
-import store from '../../store';
-import {observer} from 'mobx-react';
-import FoodScreen from '../../screens/FoodScreen';
+} from "react-native-responsive-dimensions";
+import NetInfo from "@react-native-community/netinfo";
+import utils from "../../utils";
+import ProgressiveFastImage from "@freakycoder/react-native-progressive-fast-image";
+import store from "../../store";
+import { observer } from "mobx-react";
+import FoodScreen from "../../screens/FoodScreen";
 
 export default observer(FoodCard);
-function FoodCard({data, toast, screen, separator}) {
+function FoodCard({ data, toast, screen, separator }) {
   const product_id = data._id;
   const baseVariation = data.base_variation || [];
   const additionalVariation = data.additional_variation || [];
-  const {cart, user, favouriteFoodList, setFavouriteFoodList} = store.User;
+  const { cart, user, favouriteFoodList, setFavouriteFoodList } = store.User;
 
   const [isFoodScreen, setIsFoodScreen] = useState(false);
 
-  const foodName = data.title || '';
-  const details = data.description || '---';
+  const foodName = data.title || "";
+  const details = data.description || "---";
   const rupees = data.price || 0;
-  const imgLoader = require('../../assets/images/imgLoader/img.gif');
+  const imgLoader = require("../../assets/images/imgLoader/img.gif");
   const foodImage =
-    data?.image != ''
-      ? {uri: data.image}
-      : require('../../assets/images/burger/img.jpeg');
+    data?.image != ""
+      ? { uri: data.image }
+      : require("../../assets/images/burger/img.jpeg");
   const isFavouriteFood = favouriteFoodList.some(
-    item => item._id === product_id,
+    (item) => item._id === product_id
   );
   const isEmptyVariants =
     baseVariation.length <= 0 && additionalVariation.length <= 0;
   let numOfItem = 0;
-  cart.data.forEach(item => {
+  cart.data.forEach((item) => {
     if (item.productId === data._id) {
       numOfItem += item.quantity;
     }
@@ -58,20 +58,22 @@ function FoodCard({data, toast, screen, separator}) {
   };
 
   const onPressHeart = () => {
-    NetInfo.fetch().then(state => {
+    NetInfo.fetch().then((state) => {
       if (state.isConnected) {
         if (!user) {
-          toast?.current?.show('Please login to mark favourite', 500);
+          toast?.current?.show("Please login to mark favourite", 500);
           return;
         }
         const favouriteArr = favouriteFoodList.slice();
         if (!isFavouriteFood) favouriteArr.push(data);
         else {
-          const index = favouriteArr.findIndex(item => item._id === product_id);
+          const index = favouriteArr.findIndex(
+            (item) => item._id === product_id
+          );
           if (index >= 0) favouriteArr.splice(index, 1);
         }
         setFavouriteFoodList(favouriteArr);
-      } else toast?.current?.show('Please connect to the internet', 500);
+      } else toast?.current?.show("Please connect to the internet", 500);
     });
   };
 
@@ -80,24 +82,27 @@ function FoodCard({data, toast, screen, separator}) {
       <Modal
         transparent
         visible={isFoodScreen}
-        onRequestClose={closeFoodScreen}>
+        onRequestClose={closeFoodScreen}
+      >
         <StatusBar
           animated={false}
-          translucent={screen == 'home' && isEmptyVariants ? true : false}
+          translucent={screen == "home" && isEmptyVariants ? true : false}
           backgroundColor={theme.color.button1}
           barStyle={store.Color.statusBarText}
         />
         <TouchableOpacity
           activeOpacity={1}
           onPressOut={closeFoodScreen}
-          style={styles.foodSheetWraper}>
+          style={styles.foodSheetWraper}
+        >
           <TouchableWithoutFeedback>
             <View
               style={
                 isEmptyVariants
                   ? styles.foodContainerStyle
                   : styles.foodContainerStyle2
-              }>
+              }
+            >
               <FoodScreen
                 food={data}
                 isFavouriteFood={isFavouriteFood}
@@ -122,20 +127,23 @@ function FoodCard({data, toast, screen, separator}) {
           {
             marginTop: responsiveHeight(separator),
           },
-        ]}>
+        ]}
+      >
         <View style={styles.foodCardTxtConatiner}>
           <Text
             style={styles.foodCardTitle1}
             numberOfLines={1}
-            ellipsizeMode="tail">
+            ellipsizeMode="tail"
+          >
             {utils.functions.capitalizeTheFirstLetterOfEachWord(
-              foodName.trim(),
+              foodName.trim()
             )}
           </Text>
           <Text
             style={styles.foodCardTitle2}
             numberOfLines={2}
-            ellipsizeMode="tail">
+            ellipsizeMode="tail"
+          >
             {details}
           </Text>
 
@@ -144,8 +152,9 @@ function FoodCard({data, toast, screen, separator}) {
               <Text
                 style={styles.foodCardTitle3}
                 numberOfLines={1}
-                ellipsizeMode="tail">
-                {baseVariation.length <= 0 ? 'Rs. ' : 'from Rs. '}
+                ellipsizeMode="tail"
+              >
+                {baseVariation.length <= 0 ? "Rs. " : "from Rs. "}
                 {rupees.toFixed()}
               </Text>
             </View>
@@ -153,9 +162,10 @@ function FoodCard({data, toast, screen, separator}) {
             <TouchableOpacity
               activeOpacity={0.4}
               onPress={onPressHeart}
-              style={styles.likecart}>
+              style={styles.likecart}
+            >
               <utils.vectorIcon.AntDesign
-                name={!isFavouriteFood ? 'hearto' : 'heart'}
+                name={!isFavouriteFood ? "hearto" : "heart"}
                 color={theme.color.button1}
                 size={responsiveFontSize(2.7)}
               />
@@ -169,7 +179,7 @@ function FoodCard({data, toast, screen, separator}) {
             style={styles.foodCardImg}
             loadingSource={imgLoader}
             loadingImageStyle={styles.ImageLoader}
-            thumbnailSource={require('../../assets/images/imgLoad/img.jpeg')}
+            thumbnailSource={require("../../assets/images/imgLoad/img.jpeg")}
           />
         </View>
 
@@ -178,8 +188,9 @@ function FoodCard({data, toast, screen, separator}) {
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.circleNumText}>
-              {numOfItem <= 99 ? numOfItem : '99+'}
+              style={styles.circleNumText}
+            >
+              {numOfItem <= 99 ? numOfItem : "99+"}
             </Text>
           </View>
         )}

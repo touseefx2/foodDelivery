@@ -1,39 +1,39 @@
-import React from 'react';
-import {View, TouchableOpacity, Text} from 'react-native';
-import store from '../../../store/index';
-import {observer} from 'mobx-react';
-import utils from '../../../utils';
-import {styles} from '../styles';
+import React from "react";
+import { View, TouchableOpacity, Text } from "react-native";
+import store from "../../../store/index";
+import { observer } from "mobx-react";
+import utils from "../../../utils";
+import { styles } from "../styles";
 
 export default observer(TitleSection);
-function TitleSection({props, distance}) {
-  const {location, resturantDetails} = store.User;
-  const {appName} = store.General;
-  const {sliderImages} = store.Food;
-  const walletSign = sliderImages?.rs || '$$';
-  let estimateTime = '0 min delivery';
+function TitleSection({ props, distance }) {
+  const { location, resturantDetails } = store.User;
+  const { appName } = store.General;
+  const { sliderImages } = store.Food;
+  const walletSign = sliderImages?.rs || "$$";
+  let estimateTime = "0 min delivery";
   if (
     resturantDetails?.estimatedDeliveryTime ||
     resturantDetails?.estimatedPickupTime
   )
     estimateTime =
-      resturantDetails?.estimatedDeliveryTime + ' min delivery' ||
-      resturantDetails?.estimatedPickupTime + ' min pickup';
+      resturantDetails?.estimatedDeliveryTime + " min delivery" ||
+      resturantDetails?.estimatedPickupTime + " min pickup";
 
   const goToResturantDetails = () => {
-    props.navigation.navigate('ResturantDetails');
+    props.navigation.navigate("ResturantDetails");
   };
 
   return (
     <View style={styles.titleContainer}>
       <View style={styles.titleSection1}>
-        <View style={{width: '75%'}}>
+        <View style={{ width: "75%" }}>
           <Text numberOfLines={1} ellipsizeMode="tail" style={styles.mainTitle}>
             {appName +
-              ' ' +
+              " " +
               utils.functions.capitalizeTheFirstLetterOfEachWord(
-                location?.area.name.trim(),
-              ) || ''}
+                location?.area.name.trim()
+              ) || ""}
           </Text>
         </View>
 
@@ -41,11 +41,13 @@ function TitleSection({props, distance}) {
           <TouchableOpacity
             activeOpacity={0.5}
             onPress={goToResturantDetails}
-            style={styles.mainTitle2Container}>
+            style={styles.mainTitle2Container}
+          >
             <Text
               numberOfLines={1}
               ellipsizeMode="tail"
-              style={styles.mainTitle2}>
+              style={styles.mainTitle2}
+            >
               More info
             </Text>
           </TouchableOpacity>

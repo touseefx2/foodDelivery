@@ -1,19 +1,19 @@
-import React, {useEffect, useState, useRef} from 'react';
-import {View, SafeAreaView, FlatList} from 'react-native';
-import {styles} from './styles';
-import {observer} from 'mobx-react';
-import store from '../../store/index';
-import utils from '../../utils/index';
-import theme from '../../theme';
-import Toast from 'react-native-easy-toast';
-import {responsiveHeight} from 'react-native-responsive-dimensions';
+import React, { useEffect, useState, useRef } from "react";
+import { View, SafeAreaView, FlatList } from "react-native";
+import { styles } from "./styles";
+import { observer } from "mobx-react";
+import store from "../../store/index";
+import utils from "../../utils/index";
+import theme from "../../theme";
+import Toast from "react-native-easy-toast";
+import { responsiveHeight } from "react-native-responsive-dimensions";
 
 export default observer(Favourite);
 function Favourite(props) {
   const toast = useRef(null);
 
-  const {favouriteFoodList} = store.User;
-  const {food} = store.Food;
+  const { favouriteFoodList } = store.User;
+  const { food } = store.Food;
 
   const [data, setdata] = useState([]);
   const [getDataOnce, setgetDataOnce] = useState(false);
@@ -24,12 +24,12 @@ function Favourite(props) {
     }, 5);
   }, [favouriteFoodList]);
 
-  const checkIsFavouriteFoodExistInMenu = favouriteFood => {
+  const checkIsFavouriteFoodExistInMenu = (favouriteFood) => {
     let favouriteList = [];
-    favouriteFood.forEach(item => {
-      food.forEach(item2 => {
+    favouriteFood.forEach((item) => {
+      food.forEach((item2) => {
         if (item2.data.length > 0) {
-          item2.data.forEach(element => {
+          item2.data.forEach((element) => {
             if (element._id === item._id) favouriteList.push(item);
           });
         }
@@ -39,7 +39,7 @@ function Favourite(props) {
     setgetDataOnce(true);
   };
 
-  const renderProducts = ({item}) => {
+  const renderProducts = ({ item }) => {
     return (
       <utils.FoodCard
         data={item}
@@ -73,7 +73,7 @@ function Favourite(props) {
             getDataOnce && (
               <utils.EmptyData
                 message={`It looks like you didn't make any product as favourite`}
-                screen={'favourite'}
+                screen={"favourite"}
               />
             )
           }
@@ -83,8 +83,8 @@ function Favourite(props) {
           ref={toast}
           position="bottom"
           opacity={0.9}
-          style={{backgroundColor: theme.color.button1}}
-          textStyle={{color: theme.color.buttonText}}
+          style={{ backgroundColor: theme.color.button1 }}
+          textStyle={{ color: theme.color.buttonText }}
         />
       </View>
     </SafeAreaView>

@@ -1,21 +1,21 @@
-import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
-import styles from './styles';
-import utils from '../index';
-import theme from '../../theme';
-import {observer} from 'mobx-react';
-import store from '../../store';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import React from "react";
+import { View, Text, TouchableOpacity } from "react-native";
+import styles from "./styles";
+import utils from "../index";
+import theme from "../../theme";
+import { observer } from "mobx-react";
+import store from "../../store";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default observer(StackHeader);
-function StackHeader({props, title}) {
-  const {isInternet} = store.General;
+function StackHeader({ props, title }) {
+  const { isInternet } = store.General;
 
   const isTitle =
-    title == 'setting' ||
-    title == 'login' ||
-    title == 'otp' ||
-    title == 'signup'
+    title == "setting" ||
+    title == "login" ||
+    title == "otp" ||
+    title == "signup"
       ? false
       : true;
 
@@ -30,7 +30,8 @@ function StackHeader({props, title}) {
         <TouchableOpacity
           style={styles.back}
           activeOpacity={0.6}
-          onPress={goBack}>
+          onPress={goBack}
+        >
           <utils.vectorIcon.Ionicons
             name="chevron-back"
             color={theme.color.subTitle}
