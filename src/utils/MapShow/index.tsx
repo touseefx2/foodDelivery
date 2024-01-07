@@ -1,11 +1,11 @@
-import React from 'react';
-import theme from '../../theme';
-import MapView, {PROVIDER_GOOGLE, Polygon} from 'react-native-maps';
-import {toJS} from 'mobx';
-import {Marker} from 'react-native-maps';
-import utils from '../../utils/index';
-import {styles} from './styles';
-import {responsiveFontSize} from 'react-native-responsive-dimensions';
+import React from "react";
+import theme from "../../theme";
+import MapView, { PROVIDER_GOOGLE, Polygon } from "react-native-maps";
+import { toJS } from "mobx";
+import { Marker } from "react-native-maps";
+import utils from "../../utils/index";
+import { styles } from "./styles";
+import { responsiveFontSize } from "react-native-responsive-dimensions";
 
 export default function MapShow({
   currentLocation,
@@ -15,7 +15,7 @@ export default function MapShow({
   setIsMapReady,
   checkIsRegionPointsExistInPolygons,
 }) {
-  const onRegionChangeComplete = points => {
+  const onRegionChangeComplete = (points) => {
     if (isRegionEnable) {
       checkIsRegionPointsExistInPolygons({
         latitude: points.latitude,
@@ -41,9 +41,10 @@ export default function MapShow({
       onMapReady={() => {
         setIsMapReady(true);
       }}
-      onRegionChangeComplete={onRegionChangeComplete}>
+      onRegionChangeComplete={onRegionChangeComplete}
+    >
       {polygons.length > 0 &&
-        polygons.map(item => (
+        polygons.map((item) => (
           <Polygon
             key={item._id}
             coordinates={toJS(item.latlngs)}
@@ -58,12 +59,13 @@ export default function MapShow({
   );
 }
 
-function CurrentPositionMarker({currentLocation}) {
+function CurrentPositionMarker({ currentLocation }) {
   return (
     <Marker
       identifier="current location"
       coordinate={currentLocation?.coords}
-      pinColor={theme.color.button1}>
+      pinColor={theme.color.button1}
+    >
       <utils.vectorIcon.Ionicons
         name="md-navigate-circle"
         color={theme.color.button1}
