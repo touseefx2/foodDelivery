@@ -1,5 +1,6 @@
 // const BASE_URL = "http://ec2-13-126-100-183.ap-south-1.compute.amazonaws.com/";
-const BASE_URL = "http://192.168.100.2:3001/";
+const BASE_URL = "http://ec2-13-235-83-56.ap-south-1.compute.amazonaws.com/";
+// const BASE_URL = "http://192.168.1.13:3001/";
 
 //apis
 const GET_CITIES_AREAS = "api/area/getAllAreas";
